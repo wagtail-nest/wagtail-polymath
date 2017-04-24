@@ -3,4 +3,5 @@
 *.pyo
 __pycache__/
 *.egg-info
-_build/
+build/
+dist/
