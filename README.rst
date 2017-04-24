@@ -6,7 +6,7 @@ WagtailMath
     :target: https://badge.fury.io/py/wagtailmath
 
 
-WagtailMath allows you to write equations in your Wagtail content using markup and render them beautifully.
+WagtailMath allows you to write equations in your `Wagtail <https://github.com/wagtail/wagtail>`_ content using markup and render them beautifully.
 
 WagtailMath provides a ``MathBlock`` so you can write equations in markup (TeX, MathML, ASCIIMath) and render them with MathJax.
 It features a live preview:
