@@ -1,0 +1,17 @@
+
+<p>Enter MathJax markup:</p>
+<textarea 
+  name="{{ widget.name }}"
+  {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value }}"{% endif %}{% endif %}{% endfor %}
+  id="MathInput"
+  cols="50"
+  rows="5"
+  onkeyup="Preview.Update()" 
+  style="margin-top:5px"
+>
+  {% if widget.value %}{{ widget.value }}{% endif %}
+</textarea>
+<p>Preview:</p>
+<div class="richtext" id="MathPreview"></div>
+<div id="MathBuffer" class="richtext" style="visibility:hidden;"></div>
+<script>Preview.Init(); Preview.Update();</script>
