@@ -11,7 +11,7 @@ WagtailMath allows you to write equations in your Wagtail content using markup a
 WagtailMath provides a ``MathBlock`` so you can write equations in markup (TeX, MathML, ASCIIMath) and render them with MathJax.
 It features a live preview:
 
-.. figure:: ./docs/images/mathblock.png
+.. figure:: https://github.com/JamesRamm/wagtailmath/blob/master/docs/images/mathblock.png
     :alt: MathBlock in the Wagtail admin
 
 
