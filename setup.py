@@ -56,7 +56,10 @@ setup(
         'wagtailmath',
     ],
     include_package_data=True,
-    install_requires=[],
+    install_requires=[
+        'django>=1.8,<1.11',
+        'wagtail>=1.7',
+    ],
     license="MIT",
     zip_safe=False,
     keywords='wagtailmath',
