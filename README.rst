@@ -63,5 +63,5 @@ Use the ``mathjax`` template tag in your front end template to load the MathJax 
     {% load wagtailmath %}
     ...
 
-    <script>{% mathjax %}</script>
+    <script src="{% mathjax %}"></script>
 
