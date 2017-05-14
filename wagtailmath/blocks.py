@@ -27,7 +27,7 @@ class MathJaxWidget(Widget):
     def render(self, name, value, attrs=None):
         # id gets set, but I dont know where.
         # We need it removed so the JS will work correctly
-        attrs.pop('id')
+        # attrs.pop('id')
         context = self.get_context(name, value, attrs)
         return mark_safe(render_to_string(self.template_name, context))
 

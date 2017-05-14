@@ -62,7 +62,7 @@ setup(
     ],
     license="MIT",
     zip_safe=False,
-    keywords='wagtailmath',
+    keywords='development',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Django',
