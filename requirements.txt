@@ -1,3 +1,4 @@
 
 # Additional requirements go here
+Django>=1.10
 wagtail>=1.7
