@@ -1,7 +1,10 @@
 from django import template
 
+from wagtailmath.blocks import MATHJAX_VERSION
+
 register = template.Library()
+
 
 @register.simple_tag
 def mathjax(config='TeX-MML-AM_CHTML'):
-    return 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config={}'.format(config)
+    return f'https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config={config}'

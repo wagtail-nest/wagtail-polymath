@@ -1,8 +1,10 @@
+{% load i18n %}
 
-<p>Enter MathJax markup:</p>
-<textarea 
-  name="{{ widget.name }}"
-  {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value }}"{% endif %}{% endif %}{% endfor %}
+<p>{% trans 'Enter MathJax markup:' %}</p>
+<textarea name="{{ widget.name }}"
+  {% for name, value in widget.attrs.items %}
+    {% if name %} {{ name }}{% if value %}="{{ value }}"{% endif %}{% endif %}
+  {% endfor %}
   id="{{ widget.attrs.id }}"
   cols="50"
   rows="5"
@@ -11,7 +13,7 @@
 >
   {% if widget.value %}{{ widget.value }}{% endif %}
 </textarea>
-<p>Preview:</p>
+<p>{% trans 'Preview:' %}</p>
 <div class="richtext" id="MathPreview-{{ widget.attrs.id }}"></div>
 <div id="MathBuffer-{{ widget.attrs.id }}" class="richtext" style="visibility:hidden;"></div>
 <script>
