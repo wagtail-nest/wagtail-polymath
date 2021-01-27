@@ -57,8 +57,8 @@ setup(
     ],
     include_package_data=True,
     install_requires=[
-        'django>=1.8,<1.11',
-        'wagtail>=1.7',
+        'django>=3.0',
+        'wagtail>=2.0',
     ],
     license="MIT",
     zip_safe=False,
