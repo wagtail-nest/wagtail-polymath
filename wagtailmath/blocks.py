@@ -2,8 +2,8 @@ from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.forms import Widget, CharField
 from wagtail.core.blocks import FieldBlock
-from wagtail.core.telepath import register
-from wagtail.core.widget_adapters import WidgetAdapter
+#from wagtail.core.telepath import register
+#from wagtail.core.widget_adapters import WidgetAdapter
 
 MATHJAX_VERSION = '2.7.9'
 
@@ -45,15 +45,15 @@ class MathBlock(FieldBlock):
         return value
 
 
-class MathJaxWidgetAdapter(WidgetAdapter):
-    js_constructor = 'wagtailmath.blocks.MathJaxWidget'
+#class MathJaxWidgetAdapter(WidgetAdapter):
+#    js_constructor = 'wagtailmath.blocks.MathJaxWidget'
+#
+#    def js_args(self, widget):
+#        return [
+#            widget.options,
+#        ]
 
-    def js_args(self, widget):
-        return [
-            widget.options,
-        ]
 
-
-register(MathJaxWidgetAdapter(), MathJaxWidget)
+#register(MathJaxWidgetAdapter(), MathJaxWidget)
 
 
