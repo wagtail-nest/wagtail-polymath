@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.forms import Widget, CharField
 from wagtail.core.blocks import FieldBlock
 from wagtail.core.telepath import register
+from wagtail.core.widget_adapters import WidgetAdapter
 
 MATHJAX_VERSION = '2.7.9'
 

@@ -1,5 +1,6 @@
 .venv
 venv
+*.swp
 *.pyc
 *.pyo
 __pycache__/
