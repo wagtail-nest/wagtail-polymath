@@ -1,5 +1,5 @@
 
 # Additional requirements go here
-Django>=1.10,<2.0
-wagtail>=1.7,<2.0
+Django>=3.0
+wagtail>=2.0
 

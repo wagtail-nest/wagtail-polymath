@@ -1,30 +1,34 @@
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.forms import Widget, CharField
-from wagtail.wagtailcore.blocks import FieldBlock
+from wagtail.core.blocks import FieldBlock
+#from wagtail.core.telepath import register
+#from wagtail.core.widget_adapters import WidgetAdapter
+
+MATHJAX_VERSION = '2.7.9'
+
 
 class MathJaxWidget(Widget):
-    template_name = "wagtailmath/mathjaxwidget.html"
     class Media:
         js = (
-            'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+            f'https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML',
             'wagtailmath/js/wagtailmath.js'
         )
 
+    template_name = "wagtailmath/mathjaxwidget.html"
+
     def get_context(self, name, value, attrs):
-        context = {}
-        context['widget'] = {
+        context = {'widget': {
             'name': name,
             'is_hidden': self.is_hidden,
             'required': self.is_required,
             'value': value,
             'attrs': self.build_attrs(attrs),
             'template_name': self.template_name,
-        }
+        }}
         return context
 
-
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         # id gets set, but I dont know where.
         # We need it removed so the JS will work correctly
         # attrs.pop('id')
@@ -38,8 +42,18 @@ class MathBlock(FieldBlock):
         super(MathBlock, self).__init__(**kwargs)
 
     def value_from_form(self, value):
-        print(value)
         return value
 
 
-    
+#class MathJaxWidgetAdapter(WidgetAdapter):
+#    js_constructor = 'wagtailmath.blocks.MathJaxWidget'
+#
+#    def js_args(self, widget):
+#        return [
+#            widget.options,
+#        ]
+
+
+#register(MathJaxWidgetAdapter(), MathJaxWidget)
+
+
