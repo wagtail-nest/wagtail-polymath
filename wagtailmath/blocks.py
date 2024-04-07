@@ -4,11 +4,12 @@ from django.forms import Widget, CharField
 from wagtail.blocks import FieldBlock
 #from wagtail.core.telepath import register
 #from wagtail.core.widget_adapters import WidgetAdapter
+from django.forms.widgets import HiddenInput
 
 MATHJAX_VERSION = '2.7.9'
 
 
-class MathJaxWidget(Widget):
+class MathJaxWidget(HiddenInput):
     class Media:
         js = (
             f'https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML',
