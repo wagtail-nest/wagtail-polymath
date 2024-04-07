@@ -1,5 +1,0 @@
-
-# Additional requirements go here
-Django>=3.0
-wagtail>=2.0
-
