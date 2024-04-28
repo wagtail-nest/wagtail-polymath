@@ -1,11 +1,11 @@
 from django import template
 
-from wagtail_polymath.blocks import MATHJAX_VERSION
+from wagtail_polymath.settings import WAGTAILPOLYMATH_SETTINGS
 
 
 register = template.Library()
 
 
 @register.simple_tag
-def mathjax(config="TeX-MML-AM_CHTML"):
-    return f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config={config}"
+def mathjax():
+    return WAGTAILPOLYMATH_SETTINGS["js"]

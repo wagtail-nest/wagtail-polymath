@@ -5,15 +5,9 @@ from django.utils.safestring import mark_safe
 from wagtail.blocks import FieldBlock
 
 
-MATHJAX_VERSION = "2.7.9"
-
-
 class MathJaxWidget(HiddenInput):
     class Media:
-        js = (
-            f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML",
-            "wagtail_polymath/js/streamfield.js",
-        )
+        js = ("wagtail_polymath/js/streamfield.js",)
 
     template_name = "wagtail_polymath/streamfield.html"
 
