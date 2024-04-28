@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Rename project and apply project styling by Wagtail cookie cutter
+- Rename project and apply project styling by Wagtail cookie cutter.
+- Support Inline style expressions.
 
 ## [0.1.0] - 2017-04-24
 

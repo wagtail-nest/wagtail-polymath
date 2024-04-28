@@ -17,3 +17,11 @@ def global_mathjax_js():
         url = static(WAGTAILPOLYMATH_SETTINGS["js"])
 
     return format_html('<script src="{}"></script>', url)
+
+
+@hooks.register("insert_global_admin_js")
+def global_mathjax_config_js():
+    return format_html(
+        '<script src="{}"></script>',
+        static("wagtail_polymath/js/mathjax_config.js"),
+    )
