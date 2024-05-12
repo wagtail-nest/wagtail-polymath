@@ -4,10 +4,12 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from wagtail.blocks import FieldBlock
 
+from wagtail_polymath.settings import WAGTAILPOLYMATH_ENGINE
+
 
 class MathJaxWidget(HiddenInput):
     class Media:
-        js = ("wagtail_polymath/js/streamfield.js",)
+        js = (f"wagtail_polymath/js/{WAGTAILPOLYMATH_ENGINE}_preview.js",)
 
     template_name = "wagtail_polymath/streamfield.html"
 
@@ -20,6 +22,7 @@ class MathJaxWidget(HiddenInput):
                 "value": value,
                 "attrs": self.build_attrs(attrs),
                 "template_name": self.template_name,
+                "engine": WAGTAILPOLYMATH_ENGINE,
             }
         }
         return context

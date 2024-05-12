@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<p>{% trans 'Enter MathJax markup:' %}</p>
+<p>{% trans 'Enter math expression:' %}</p>
 <textarea name="{{ widget.name }}"
   {% for name, value in widget.attrs.items %}
     {% if name %} {{ name }}{% if value %}="{{ value }}"{% endif %}{% endif %}
@@ -8,7 +8,6 @@
   id="{{ widget.attrs.id }}"
   cols="50"
   rows="5"
-  onkeyup="previews['{{widget.name}}'].Update()"
   style="margin-top:5px"
 >
   {% if widget.value %}{{ widget.value }}{% endif %}
@@ -24,12 +23,5 @@
         "MathPreview-{{ widget.attrs.id }}",
         "MathBuffer-{{ widget.attrs.id }}",
         "{{ widget.attrs.id }}"
-      );
-
-  //
-  //  Cache a callback to the CreatePreview action
-  //
-  previews["{{widget.name}}"].callback = MathJax.Callback(["CreatePreview", previews["{{widget.name}}"]]);
-  previews["{{widget.name}}"].callback.autoReset = true;  // make sure it can run more than once
-  previews["{{widget.name}}"].Update();
+  );
 </script>

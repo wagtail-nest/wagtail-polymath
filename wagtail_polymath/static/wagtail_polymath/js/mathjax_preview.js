@@ -1,7 +1,6 @@
-
 // Update the preview area on input. Lifted directly from mathjax website examples
 class Preview {
-
+  //
   //  Get the preview and buffer DIV's
   //
   constructor (previewId, bufferId, inputId) {
@@ -13,6 +12,18 @@ class Preview {
     this.mjRunning = false;  // true when MathJax is processing
     this.mjPending = false;  // true when a typeset has been queued
     this.oldText = null;     // used to check if an update is needed
+
+    this.callback = MathJax.Callback(["CreatePreview", this]);
+    this.callback.autoReset = true;  // make sure it can run more than once
+
+    this.input.addEventListener("input", () => {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(this.callback, this.delay);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => { this.callback() });
   }
 
   //
@@ -26,20 +37,7 @@ class Preview {
     buffer.style.visibility = "hidden"; buffer.style.position = "absolute";
     preview.style.position = ""; preview.style.visibility = "";
   }
-  //
-  //  This gets called when a key is pressed in the textarea.
-  //  We check if there is already a pending update and clear it if so.
-  //  Then set up an update to occur after a small delay (so if more keys
-  //    are pressed, the update won't occur until after there has been
-  //    a pause in the typing).
-  //  The callback function is set up below, after the Preview object is set up.
-  //
-  Update () {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-    this.timeout = setTimeout(this.callback, this.delay);
-  }
+
   //
   //  Creates the preview and runs MathJax on it.
   //  If MathJax is already trying to render the code, return
@@ -65,6 +63,7 @@ class Preview {
       );
     }
   }
+
   //
   //  Indicate that MathJax is no longer running,
   //  and swap the buffers to show the results.

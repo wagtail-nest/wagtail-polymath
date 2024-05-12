@@ -1,27 +1,51 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.templatetags.static import static
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from wagtail import hooks
 
 from wagtail_polymath.settings import WAGTAILPOLYMATH_SETTINGS
 
 
-@hooks.register("insert_global_admin_js")
-def global_mathjax_js():
+def url(path):
     validate = URLValidator()
     try:
-        validate(WAGTAILPOLYMATH_SETTINGS["js"])
-        url = WAGTAILPOLYMATH_SETTINGS["js"]
+        validate(path)
+        return path
     except ValidationError:
-        url = static(WAGTAILPOLYMATH_SETTINGS["js"])
-
-    return format_html('<script src="{}"></script>', url)
+        return static(path)
 
 
-@hooks.register("insert_global_admin_js")
-def global_mathjax_config_js():
-    return format_html(
-        '<script src="{}"></script>',
-        static("wagtail_polymath/js/mathjax_config.js"),
-    )
+@hooks.register("insert_global_admin_css")
+def polymath_css():
+    if WAGTAILPOLYMATH_SETTINGS.get("css", None):
+        return format_html_join(
+            "\n",
+            '<link rel="stylesheet" href="{0}"></script>',
+            ((url(path),) for path in WAGTAILPOLYMATH_SETTINGS["css"]),
+        )
+    else:
+        return ""
+
+
+@hooks.register("insert_editor_js")
+def polymath_js():
+    if WAGTAILPOLYMATH_SETTINGS.get("js", None):
+        return format_html_join(
+            "\n",
+            '<script src="{0}"></script>',
+            ((url(path),) for path in WAGTAILPOLYMATH_SETTINGS["js"]),
+        )
+    else:
+        return ""
+
+
+@hooks.register("insert_editor_js")
+def polymath_config_js():
+    if WAGTAILPOLYMATH_SETTINGS.get("config", None):
+        return format_html(
+            '<script src="{}"></script>',
+            url(WAGTAILPOLYMATH_SETTINGS["config"]),
+        )
+    else:
+        return ""
