@@ -1,4 +1,4 @@
-# Contributing to polymath
+# Contributing to wagtail-polymath
 
 Contributions are welcome, and they are greatly appreciated! Every
 little bit helps, and credit will always be given.
@@ -29,8 +29,8 @@ is open to whoever wants to implement it.
 
 ### Write Documentation
 
-wagtail_mathblock could always use more documentation, whether as part of the
-official wagtail_mathblock docs, in docstrings, or even on the web in blog posts,
+wagtail-polymath could always use more documentation, whether as part of the
+official wagtail-polymath docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 ### Submit Feedback
@@ -46,7 +46,7 @@ If you are proposing a feature:
 
 ### Get Started!
 
-Ready to contribute? Here's how to set up `wagtail-mathblock` for local development.
+Ready to contribute? Here's how to set up `wagtail-polymath` for local development.
 
 1. Fork the `wagtail-polymath` repo on GitHub.
 2. Clone your fork locally:
@@ -55,12 +55,13 @@ Ready to contribute? Here's how to set up `wagtail-mathblock` for local developm
 git clone https://github.com/your_name_here/wagtail-polymath
 ```
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:
+3. Install your local copy into a virtualenv:
 
 ```sh
-mkvirtualenv wagtail-mathblock
-cd wagtail-mathblock/
-python setup.py develop
+cd wagtail-polymath/
+python -m venv venv
+source venv/bin/activate
+pip install .
 ```
 
 4. Create a branch for local development:
@@ -71,16 +72,14 @@ git checkout -b name-of-your-bugfix-or-feature
 
    Now you can make your changes locally.
 
-5. When you're done making changes, check that your changes pass flake8 and the
+5. When you're done making changes, check that your changes pass `pre-commit` and the
    tests, including testing other Python versions with tox:
 
 ```sh
-flake8 mathblock tests
-python setup.py test
+pre-commit
+pip install .
 tox
 ```
-
-   To get flake8 and tox, just pip install them into your virtualenv.
 
 6. Commit your changes and push your branch to GitHub:
 

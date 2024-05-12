@@ -64,11 +64,20 @@ class MyPage(Page):
     ])
 ```
 
-Use the `mathjax` template tag in your front end template to load the MathJax library:
+Load required CSS and JS in HTML template:
 
 ```html
 {% load wagtail_polymath %}
 ...
 
-<script src="{% mathjax %}"></script>
+{% block extra_css %}
+{% wagtail_polymath_css %}
+...
+{% endblock extra_css %}
+
+...
+{% block extra_js %}
+{% wagtail_polymath_js %}
+...
+{% endblock extra_js %}
 ```
