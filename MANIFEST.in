@@ -1,6 +1,6 @@
-include AUTHORS.rst
-include CONTRIBUTING.rst
-include HISTORY.rst
+include CONTRIBUTORS.md
+include CONTRIBUTING.md
+include CHANGELOG.md
 include LICENSE
-include README.rst
+include README.md
 recursive-include wagtailmath *.html *.png *.gif *js *.css *jpg *jpeg *svg *py
