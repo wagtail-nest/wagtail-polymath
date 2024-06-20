@@ -6,7 +6,7 @@ source_pkgs = wagtailmath
 omit = **/migrations/*,tests/*
 
 [paths]
-source = wagtailmath,.tox/py*/**/site-packages
+source = src/wagtailmath,.tox/py*/**/site-packages
 
 [report]
 show_missing = True

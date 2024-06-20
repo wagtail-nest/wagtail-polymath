@@ -30,7 +30,7 @@ class Preview {
   //  This gets called when a key is pressed in the textarea.
   //  We check if there is already a pending update and clear it if so.
   //  Then set up an update to occur after a small delay (so if more keys
-  //    are pressed, the update won't occur until after there has been 
+  //    are pressed, the update won't occur until after there has been
   //    a pause in the typing).
   //  The callback function is set up below, after the Preview object is set up.
   //
@@ -46,7 +46,7 @@ class Preview {
   //  If the text hasn't changed, return
   //  Otherwise, indicate that MathJax is running, and start the
   //    typesetting.  After it is done, call PreviewDone.
-  //  
+  //
   CreatePreview () {
     this.timeout = null;
     if (this.mjPending) return;
@@ -55,7 +55,7 @@ class Preview {
     if (this.mjRunning) {
       this.mjPending = true;
       MathJax.Hub.Queue(["CreatePreview", this]);
-    } 
+    }
     else {
       this.buffer.innerHTML = this.oldtext = text;
       this.mjRunning = true;
@@ -74,4 +74,3 @@ class Preview {
     this.SwapBuffers();
   }
 }
-
