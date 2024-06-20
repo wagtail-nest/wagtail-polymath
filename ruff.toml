@@ -38,6 +38,7 @@ lines-between-types = 1
     "PLR2004", # magic value used in comparison
     "S311",    # standard pseudo-random generators are not suitable for cryptographic purposes
 ]
+"setup.py" = ["S605", "S607"]
 
 
 [format]
