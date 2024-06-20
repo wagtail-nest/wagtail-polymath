@@ -1,0 +1,51 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "wagtailmath"
+authors = [{name = "James Ramm", email = "jamessramm@gmail.com"}]
+description = "Wagtail StreamField block for rendering mathematical equations"
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Wagtail",
+    "Framework :: Wagtail :: 2",
+]
+requires-python = ">=3.8"
+dynamic = ["version"]
+dependencies = [
+    "Django>=3.0",
+    "Wagtail>=2.0"
+]
+
+[project.urls]
+Home = "https://github.com/wagtail-nest/wagtail-polymath"
+Changelog = "https://github.com/wagtail-nest/wagtail-polymath/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/wagtail-nest/wagtail-polymath/blob/main/docs/"
+
+[tool.flit.module]
+name = "wagtailmath"
+
+[tool.flit.sdist]
+exclude = [
+    "docs",
+    ".*",
+    "*.js",
+    "*.json",
+    "*.ini",
+    "*.yml",
+    "ruff.toml",
+]
