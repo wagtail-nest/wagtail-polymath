@@ -1,35 +1,10 @@
 {% load i18n %}
 
-<p>{% trans 'Enter MathJax markup:' %}</p>
-<textarea name="{{ widget.name }}"
-  {% for name, value in widget.attrs.items %}
-    {% if name %} {{ name }}{% if value %}="{{ value }}"{% endif %}{% endif %}
-  {% endfor %}
-  id="{{ widget.attrs.id }}"
-  cols="50"
-  rows="5"
-  onkeyup="previews['{{widget.name}}'].Update()"
-  style="margin-top:5px"
->
-  {% if widget.value %}{{ widget.value }}{% endif %}
-</textarea>
-<p>{% trans 'Preview:' %}</p>
-<div class="richtext" id="MathPreview-{{ widget.attrs.id }}"></div>
-<div id="MathBuffer-{{ widget.attrs.id }}" class="richtext" style="visibility:hidden;"></div>
-<script>
-  if (!previews) {
-    var previews = {};
-  }
-  previews["{{widget.name}}"] = new Preview(
-        "MathPreview-{{ widget.attrs.id }}",
-        "MathBuffer-{{ widget.attrs.id }}",
-        "{{ widget.attrs.id }}"
-      );
+<h3>{% translate "Enter the MathJax markup" %}</h3>
 
-  //
-  //  Cache a callback to the CreatePreview action
-  //
-  previews["{{widget.name}}"].callback = MathJax.Callback(["CreatePreview", previews["{{widget.name}}"]]);
-  previews["{{widget.name}}"].callback.autoReset = true;  // make sure it can run more than once
-  previews["{{widget.name}}"].Update();
-</script>
+<textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+
+<h3>{% translate "Preview" %}</h3>
+<div id="MathPreview-{{ widget.attrs.id }}"></div>
+<div id="MathBuffer-{{ widget.attrs.id }}" style="visibility:hidden;"></div>

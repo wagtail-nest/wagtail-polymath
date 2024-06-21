@@ -1,63 +1,63 @@
-from django.forms import CharField, Widget
-from django.template.loader import render_to_string
-from django.utils.safestring import mark_safe
-from wagtail.core.blocks import FieldBlock
+from django import forms
+from django.utils.functional import cached_property
+from wagtail import VERSION as WAGTAIL_VERSION
+from wagtail.admin.staticfiles import versioned_static
+from wagtail.blocks import TextBlock
 
-
-# from wagtail.core.telepath import register
-# from wagtail.core.widget_adapters import WidgetAdapter
 
 MATHJAX_VERSION = "2.7.9"
 
 
-class MathJaxWidget(Widget):
-    class Media:
-        js = (
-            f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML",
-            "wagtailmath/js/wagtailmath.js",
-        )
-
+class MathJaxWidgetBase(forms.Textarea):
     template_name = "wagtailmath/mathjaxwidget.html"
 
-    def get_context(self, name, value, attrs):
-        context = {
-            "widget": {
-                "name": name,
-                "is_hidden": self.is_hidden,
-                "required": self.is_required,
-                "value": value,
-                "attrs": self.build_attrs(attrs),
-                "template_name": self.template_name,
-            }
-        }
-        return context
-
-    def render(self, name, value, attrs=None, renderer=None):
-        # id gets set, but I dont know where.
-        # We need it removed so the JS will work correctly
-        # attrs.pop('id')
-        context = self.get_context(name, value, attrs)
-        return mark_safe(render_to_string(self.template_name, context))  # noqa: S308
-
-
-class MathBlock(FieldBlock):
-    def __init__(self, required=True, help_text=None, **kwargs):
-        self.field = CharField(
-            required=required, help_text=help_text, widget=MathJaxWidget()
+    def _get_media_js(self):
+        return (
+            f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML",
+            versioned_static("wagtailmath/js/wagtailmath.js"),
         )
-        super().__init__(**kwargs)
 
-    def value_from_form(self, value):
-        return value
-
-
-# class MathJaxWidgetAdapter(WidgetAdapter):
-#    js_constructor = 'wagtailmath.blocks.MathJaxWidget'
-#
-#    def js_args(self, widget):
-#        return [
-#            widget.options,
-#        ]
+    @property
+    def media(self):
+        return forms.Media(js=self._get_media_js())
 
 
-# register(MathJaxWidgetAdapter(), MathJaxWidget)
+if WAGTAIL_VERSION >= (6, 0):
+
+    class MathJaxWidget(MathJaxWidgetBase):
+        def build_attrs(self, *args, **kwargs):
+            attrs = super().build_attrs(*args, **kwargs)
+            attrs["data-controller"] = "wagtailmathjax"
+
+            return attrs
+
+        def _get_media_js(self):
+            return (
+                *super()._get_media_js(),
+                versioned_static("wagtailmath/js/wagtailmath-mathjax-controller.js"),
+            )
+else:
+    from wagtail.telepath import register
+    from wagtail.utils.widgets import WidgetWithScript
+    from wagtail.widget_adapters import WidgetAdapter
+
+    class MathJaxWidget(WidgetWithScript, MathJaxWidgetBase):
+        def render_js_init(self, id_, name, value):
+            return f'initMathJaxPreview("{id_}");'
+
+    class MathJaxAdapter(WidgetAdapter):
+        js_constructor = "wagtailmath.widgets.MathJaxWidget"
+
+        class Media:
+            # TODO: remove the adapter when dropping support for Wagtail 5.2
+            js = ["wagtailmath/js/mathjax-textarea-adapter.js"]
+
+    register(MathJaxAdapter(), MathJaxWidget)
+
+
+class MathBlock(TextBlock):
+    @cached_property
+    def field(self):
+        field_kwargs = {"widget": MathJaxWidget(attrs={"rows": self.rows})}
+        field_kwargs.update(self.field_options)
+        return forms.CharField(**field_kwargs)

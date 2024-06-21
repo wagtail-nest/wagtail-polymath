@@ -1,10 +1,9 @@
-
 // Update the preview area on input. Lifted directly from mathjax website examples
 class Preview {
 
   //  Get the preview and buffer DIV's
   //
-  constructor (previewId, bufferId, inputId) {
+  constructor(previewId, bufferId, inputId) {
     this.preview = document.getElementById(previewId);
     this.buffer = document.getElementById(bufferId);
     this.input = document.getElementById(inputId);
@@ -20,12 +19,16 @@ class Preview {
   //  (We use visibility:hidden rather than display:none since
   //  the results of running MathJax are more accurate that way.)
   //
-  SwapBuffers () {
+  SwapBuffers() {
     var buffer = this.preview, preview = this.buffer;
-    this.buffer = buffer; this.preview = preview;
-    buffer.style.visibility = "hidden"; buffer.style.position = "absolute";
-    preview.style.position = ""; preview.style.visibility = "";
+    this.buffer = buffer;
+    this.preview = preview;
+    buffer.style.visibility = "hidden";
+    buffer.style.position = "absolute";
+    preview.style.position = "";
+    preview.style.visibility = "";
   }
+
   //
   //  This gets called when a key is pressed in the textarea.
   //  We check if there is already a pending update and clear it if so.
@@ -34,12 +37,13 @@ class Preview {
   //    a pause in the typing).
   //  The callback function is set up below, after the Preview object is set up.
   //
-  Update () {
+  Update() {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
     this.timeout = setTimeout(this.callback, this.delay);
   }
+
   //
   //  Creates the preview and runs MathJax on it.
   //  If MathJax is already trying to render the code, return
@@ -47,7 +51,7 @@ class Preview {
   //  Otherwise, indicate that MathJax is running, and start the
   //    typesetting.  After it is done, call PreviewDone.
   //
-  CreatePreview () {
+  CreatePreview() {
     this.timeout = null;
     if (this.mjPending) return;
     var text = this.input.value;
@@ -55,22 +59,46 @@ class Preview {
     if (this.mjRunning) {
       this.mjPending = true;
       MathJax.Hub.Queue(["CreatePreview", this]);
-    }
-    else {
+    } else {
       this.buffer.innerHTML = this.oldtext = text;
       this.mjRunning = true;
       MathJax.Hub.Queue(
-	      ["Typeset", MathJax.Hub, this.buffer],
-	      ["PreviewDone", this]
+        ["Typeset", MathJax.Hub, this.buffer],
+        ["PreviewDone", this]
       );
     }
   }
+
   //
   //  Indicate that MathJax is no longer running,
   //  and swap the buffers to show the results.
   //
-  PreviewDone () {
+  PreviewDone() {
     this.mjRunning = this.mjPending = false;
     this.SwapBuffers();
+  }
+}
+
+
+function initMathJaxPreview(id) {
+  window.wagtailMathPreviews = window.WagtailMathPreviews || {};
+
+  window.wagtailMathPreviews[id] = new Preview(
+    "MathPreview-" + id,
+    "MathBuffer-" + id,
+    id
+  );
+
+  // Cache a callback to the CreatePreview action
+  window.wagtailMathPreviews[id].callback = MathJax.Callback(["CreatePreview", window.wagtailMathPreviews[id]]);
+  window.wagtailMathPreviews[id].callback.autoReset = true; // make sure it can run more than once
+  window.wagtailMathPreviews[id].Update();
+
+  // attach a keyup event listener so we update the preview
+  const target = document.getElementById(id);
+  if (target) {
+    target.addEventListener("keyup", function() {
+      window.wagtailMathPreviews[id].Update();
+    })
   }
 }
