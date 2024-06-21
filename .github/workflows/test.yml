@@ -1,0 +1,49 @@
+name: polymath CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'stable/**'
+
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: pre-commit/action@v3.0.1
+
+  test-sqlite:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install
+        run: |
+          python -Im pip install --upgrade pip setuptools wheel
+          python -Im pip install .[ci]
+      - name: Test
+        run: tox

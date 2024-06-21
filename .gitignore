@@ -1,9 +1,25 @@
-.venv
-venv
+# Directories in the project root
+/.venv/
+/venv/
+/.vscode/
+/.tox/
+/build/
+/dist/
+
+# Files in the project root
+/.coverage*
+!/.coveragerc
+
+# Files anywhere
+*.db
+*.py[co]
 *.swp
-*.pyc
-*.pyo
-__pycache__/
 *.egg-info
-build/
-dist/
+.env
+
+# Directories anywhere
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+test-media/
+test-static/

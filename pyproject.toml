@@ -33,6 +33,18 @@ dependencies = [
     "Django>=4.2",
     "Wagtail>=5.2"
 ]
+[project.optional-dependencies]
+linting = ["pre-commit>=3.6.0,<4",]
+testing = [
+    "dj-database-url==2.1.0",
+    "pytest==8.1.1",
+    "pytest-cov==5.0.0",
+    "pytest-django==4.8.0",
+]
+ci = [
+    "tox>=4.15.1,<5",
+    "tox-gh-actions>=3.2,<3.3",
+]
 
 [project.urls]
 Home = "https://github.com/wagtail-nest/wagtail-polymath"
@@ -45,6 +57,7 @@ name = "wagtailmath"
 [tool.flit.sdist]
 exclude = [
     "docs",
+    "tests",
     ".*",
     "*.js",
     "*.json",
@@ -52,3 +65,7 @@ exclude = [
     "*.yml",
     "ruff.toml",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ". tests"
+DJANGO_SETTINGS_MODULE = "testproject.settings"
