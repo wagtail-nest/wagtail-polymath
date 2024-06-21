@@ -1,6 +1,17 @@
 # wagtail-polymath
 
-[![image](https://badge.fury.io/py/wagtailmath.svg)](https://badge.fury.io/py/wagtailmath)
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![PyPI version](https://img.shields.io/pypi/v/wagtailmath.svg?style=flat)](https://pypi.org/project/wagtailmath)
+[![Build status](https://img.shields.io/github/actions/workflow/status/wagtail-nest/wagtail-polymath/test.yml?branch=main)](https://github.com/wagtail-nest/wagtail-polymath/actions)
+
+## Links
+
+- [Documentation](https://github.com/wagtail-nest/wagtail-polymath/blob/main/README.md)
+- [Changelog](https://github.com/wagtail-nest/wagtail-polymath/blob/main/CHANGELOG.md)
+- [Contributing](https://github.com/wagtail-nest/wagtail-polymath/blob/main/CONTRIBUTING.md)
+- [Discussions](https://github.com/wagtail-nest/wagtail-polymath/discussions)
+- [Security](https://github.com/wagtail-nest/wagtail-polymath/security)
 
 wagtail-polymath allows you to write equations in your
 [Wagtail](https://github.com/wagtail/wagtail) content using markup and
@@ -10,7 +21,7 @@ wagtail-polymath provides a `MathBlock` so you can write equations in markup
 (TeX, MathML, ASCIIMath) and render them with MathJax. It features a
 live preview:
 
-![](https://github.com/wagtail-next/wagtail-polymath/blob/main/docs/images/mathblock.png)
+![](https://github.com/wagtail-nest/wagtail-polymath/blob/main/docs/images/mathblock.png)
 
 `MathBlock` uses MathJax for rendering so there is very little to do on
 the front end. Simply include the MathJax JS and render the raw
@@ -28,7 +39,7 @@ For help on using the markup languages see the relevant MathJax
 documentation (e.g. https://docs.mathjax.org/en/v2.7-latest/tex.html) and
 the markup language-specific documentation (e.g. https://en.wikibooks.org/wiki/LaTeX)
 
-# Quickstart
+## Quickstart
 
 Install wagtailmath:
 
@@ -68,3 +79,14 @@ MathJax library:
 
 <script src="{% mathjax %}"></script>
 ```
+
+
+## Contributing
+
+All contributions are welcome! See [CONTRIBUTING.md](https://github.com/wagtail-nest/wagtail-polymath/blob/main/CONTRIBUTING.md)
+
+Supported versions:
+
+- Python 3.8, 3.9, 3.10, 3.11, 3.12
+- Django 4.2, 5.0
+- Wagtail 5.2 (LTS), 6.0, 6.1
