@@ -1,6 +1,10 @@
 # Credits
 
-## Development Lead
+## Maintainers
+
+-   The Wagtail Nest crew
+
+## Original development Lead
 
 -   James Ramm (jamessramm@gmail.com)
 

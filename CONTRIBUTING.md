@@ -1,102 +1,84 @@
-# Contributing
+# Contributing to Wagtail Polymath
 
-Contributions are welcome, and they are greatly appreciated! Every
-little bit helps, and credit will always be given. 
+Thank you for considering to help Wagtail Polymath.
 
-You can contribute in many ways:
+We welcome all support, whether on bug reports, code, reviews, tests, documentation, translations or just feature requests.
 
-## Types of Contributions
+## Working on an issue
 
-### Report Bugs
+👉 If an issue isn’t being worked on by anyone, go for it! **No need to ask "please assign me this issue".** Add a comment to claim the issue once you’re ready to start.
 
-Report bugs at https://github.com/wagtail-nest/wagtail-polymath/issues.
+Always start work on issues or features by creating a new git branch from the most up-to-date `main` branch.
+When ready, open a pull request with as detailed a description as possible, including a reference to the GitHub issue
+number that the PR addresses or relates to. Use `Fixes #123`, `Closes #123` or `Addresses #123` when fixing an issue.
+Use `Relates to #123` or `Part of #123` if addressing a small part of a multi-item issue.
 
-If you are reporting a bug, please include:
 
-* Your operating system name and version.
-* Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
+## Reporting bugs
 
-### Fix Bugs
+To report bugs, use our [issue tracker](https://github.com/wagtail-nest/wagtail-polymath/issues).
 
-Look through the GitHub issues for bugs. Anything tagged with "bug"
-is open to whoever wants to implement it.
 
-### Implement Features
+## Feature requests
 
-Look through the GitHub issues for features. Anything tagged with "feature"
-is open to whoever wants to implement it.
+Use our [issue tracker](https://github.com/wagtail-nest/wagtail-polymath/issues) for feature requests
 
-### Write Documentation
 
-`wagtail-polymath` could always use more documentation, whether as part of the 
-official `wagtail-polymath` docs, in docstrings, or even on the web in blog posts,
-articles, and such.
+## Code reviews
 
-### Submit Feedback
+We welcome code reviews from everyone. You can see a list of [pull requests](https://github.com/wagtail-nest/wagtail-polymath/pulls)
 
-The best way to send feedback is to file an issue at https://github.com/wagtail-nest/wagtail-polymath/issues.
 
-If you are proposing a feature:
+## Triaging issues
 
-* Explain in detail how it would work.
-* Keep the scope as narrow as possible, to make it easier to implement.
-* Remember that this is a volunteer-driven project, and that contributions
-  are welcome :)
+We welcome help with triaging issues and pull requests. You can help by:
 
-## Get Started!
+- Adding more details or your own perspective to bug reports or feature requests.
+- Reviewing or otherwise offering your feedback on pull requests.
 
-Ready to contribute? Here's how to set up `wagtail-polymath` for local development.
 
-1. Fork the `wagtail-polymath` repo on GitHub.
-2. Clone your fork locally::
+## Development instructions
 
-    $ git clone git@github.com:your_name_here/wagtail-polymath.git
+### Install
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+To make changes to this project, first clone this repository:
 
-    $ mkvirtualenv wagtail-polymath
-    $ cd wagtail-polymath/
-    $ python setup.py develop
+```sh
+git clone git@github.com:wagtail-nest/wagtail-polymath.git
+cd wagtail-polymath
+```
 
-4. Create a branch for local development::
+With your preferred virtualenv activated, install testing dependencies:
 
-    $ git checkout -b name-of-your-bugfix-or-feature
+```sh
+pip install -e '.[testing]' -U
+```
 
-   Now you can make your changes locally.
+### pre-commit
 
-5. When you're done making changes, check that your changes pass flake8 and the
-   tests, including testing other Python versions with tox::
+Note that this project uses [pre-commit](https://github.com/pre-commit/pre-commit). To set up locally:
 
-        $ flake8 mathblock tests
-        $ python setup.py test
-        $ tox
+```shell
+# if you don't have it yet, globally
+$ pip install pre-commit
+# go to the project directory
+$ cd wagtail-polymath
+# initialize pre-commit
+$ pre-commit install
 
-   To get flake8 and tox, just pip install them into your virtualenv. 
+# Optional, run all checks once for this, then the checks will run only on the changed files
+$ pre-commit run --all-files
+```
 
-6. Commit your changes and push your branch to GitHub::
+### How to run tests
 
-    $ git add .
-    $ git commit -m "Your detailed description of your changes."
-    $ git push origin name-of-your-bugfix-or-feature
+Now you can run tests as shown below:
 
-7. Submit a pull request through the GitHub website.
+```sh
+tox
+```
 
-## Pull Request Guidelines
+or, you can run them for a specific environment `tox -e python3.11-django4.2-wagtail5.2` or specific test
+`tox -e python3.11-django4.2-wagtail5.2 -- tests/test_placeholder.py`
 
-Before you submit a pull request, check that it meets these guidelines:
-
-1. The pull request should include tests.
-2. If the pull request adds functionality, the docs should be updated. Put
-   your new functionality into a function with a docstring, and add the
-   feature to the list in README.rst.
-3. The pull request should work for all supported versions. Check 
-   https://travis-ci.org/JamesRamm/wagtail-mathblock/pull_requests
-   and make sure that the tests pass for all supported Python versions.
-
-## Tips
-----
-
-To run a subset of tests::
-
-    $ python -m unittest tests.test_mathblock
+To run the test app interactively, use `tox -e interactive`, visit `http://127.0.0.1:8020/admin/` and log in with `admin`/`changeme`.
