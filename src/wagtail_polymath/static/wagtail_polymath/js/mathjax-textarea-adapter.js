@@ -36,5 +36,5 @@
         };
     };
 
-    window.telepath.register('wagtailmath.widgets.MathJaxWidget', MathJaxTextarea);
+    window.telepath.register('wagtail_polymath.widgets.MathJaxWidget', MathJaxTextarea);
 })();

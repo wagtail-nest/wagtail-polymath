@@ -11,6 +11,7 @@
   - added tests skeleton
 - Added support for Wagtail 5.2+
 - Dropped support for Wagtail < 5.2, Django < 4.2
+- Rename package to wagtail_polymath
 
 ## 1.2.0 (2021-05-18)
 

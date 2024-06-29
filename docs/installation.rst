@@ -4,9 +4,9 @@ Installation
 
 At the command line::
 
-    $ easy_install wagtailmath
+    $ easy_install wagtail-polymath
 
 Or, if you have virtualenvwrapper installed::
 
-    $ mkvirtualenv wagtailmath
-    $ pip install wagtailmath
+    $ mkvirtualenv wagtail-polymath
+    $ pip install wagtail-polymath
