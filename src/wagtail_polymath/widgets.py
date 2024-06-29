@@ -7,12 +7,12 @@ MATHJAX_VERSION = "2.7.9"
 
 
 class MathJaxWidgetBase(forms.Textarea):
-    template_name = "wagtailmath/mathjaxwidget.html"
+    template_name = "wagtail_polymath/mathjaxwidget.html"
 
     def _get_media_js(self):
         return (
             f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML",
-            versioned_static("wagtailmath/js/wagtailmath.js"),
+            versioned_static("wagtail_polymath/js/wagtailmath.js"),
         )
 
     @property
@@ -32,7 +32,9 @@ if WAGTAIL_VERSION >= (6, 0):
         def _get_media_js(self):
             return (
                 *super()._get_media_js(),
-                versioned_static("wagtailmath/js/wagtailmath-mathjax-controller.js"),
+                versioned_static(
+                    "wagtail_polymath/js/wagtailmath-mathjax-controller.js"
+                ),
             )
 else:
     from wagtail.telepath import register
@@ -44,10 +46,10 @@ else:
             return f'initMathJaxPreview("{id_}");'
 
     class MathJaxAdapter(WidgetAdapter):
-        js_constructor = "wagtailmath.widgets.MathJaxWidget"
+        js_constructor = "wagtail_polymath.widgets.MathJaxWidget"
 
         class Media:
             # TODO: remove the adapter when dropping support for Wagtail 5.2
-            js = ["wagtailmath/js/mathjax-textarea-adapter.js"]
+            js = ["wagtail_polymath/js/mathjax-textarea-adapter.js"]
 
     register(MathJaxAdapter(), MathJaxWidget)

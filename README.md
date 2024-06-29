@@ -41,9 +41,9 @@ the markup language-specific documentation (e.g. https://en.wikibooks.org/wiki/L
 
 ## Quickstart
 
-Install wagtailmath:
+Install wagtail-polymath:
 
-    pip install wagtailmath
+    pip install wagtail-polymath
 
 Add it to your `INSTALLED_APPS`:
 
@@ -52,7 +52,7 @@ Add it to your `INSTALLED_APPS`:
 
 INSTALLED_APPS = (
     # ...
-    "wagtailmath",
+    "wagtail_polymath",
     # ...
 )
 ```
@@ -60,7 +60,7 @@ INSTALLED_APPS = (
 Use `MathBlock` in your `StreamField` content:
 
 ```python
-from wagtailmath.blocks import MathBlock
+from wagtail_polymath.blocks import MathBlock
 
 class MyPage(Page):
     body = StreamField([
@@ -74,12 +74,11 @@ Use the `mathjax` template tag in your front end template to load the
 MathJax library:
 
 ```django+html
-{% load wagtailmath %}
+{% load wagtail_polymath %}
 ...
 
 <script src="{% mathjax %}"></script>
 ```
-
 
 ## Contributing
 

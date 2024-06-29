@@ -3,9 +3,10 @@
 import django.db.models.deletion
 import wagtail.blocks
 import wagtail.fields
-import wagtailmath.blocks
 
 from django.db import migrations, models
+
+import wagtail_polymath.blocks
 
 
 class Migration(migrations.Migration):
@@ -39,7 +40,7 @@ class Migration(migrations.Migration):
                                 wagtail.blocks.CharBlock(form_classname="full title"),
                             ),
                             ("paragraph", wagtail.blocks.RichTextBlock()),
-                            ("equation", wagtailmath.blocks.MathBlock()),
+                            ("equation", wagtail_polymath.blocks.MathBlock()),
                         ],
                         use_json_field=True,
                     ),

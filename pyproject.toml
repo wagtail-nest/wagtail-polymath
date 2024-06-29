@@ -3,7 +3,7 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "wagtailmath"
+name = "wagtail-polymath"
 authors = [{name = "James Ramm", email = "jamessramm@gmail.com"}]
 description = "Wagtail StreamField block for rendering mathematical equations"
 readme = "README.md"
@@ -52,7 +52,7 @@ Changelog = "https://github.com/wagtail-nest/wagtail-polymath/blob/main/CHANGELO
 Documentation = "https://github.com/wagtail-nest/wagtail-polymath/blob/main/docs/"
 
 [tool.flit.module]
-name = "wagtailmath"
+name = "wagtail_polymath"
 
 [tool.flit.sdist]
 exclude = [

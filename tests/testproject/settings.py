@@ -33,7 +33,7 @@ IS_INTERACTIVE = "INTERACTIVE" in os.environ
 # Application definition
 
 INSTALLED_APPS = [
-    "wagtailmath",
+    "wagtail_polymath",
     "testapp",
     "wagtail.users",
     "wagtail.snippets",
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "wagtail.images",
     "wagtail.search",
     "wagtail.admin",
+    "wagtail.contrib.redirects",
     "wagtail.contrib.routable_page",
     "wagtail.contrib.styleguide",
     "wagtail.sites",
