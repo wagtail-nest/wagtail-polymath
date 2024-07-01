@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 'stable/**'
+      - "stable/**"
   pull_request:
     branches: [main]
 
@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    # Keep in sync with .pre-comit-config.yaml
-    - run: python -Im pip install --user ruff==0.4.9
+      # Keep in sync with .pre-comit-config.yaml
+      - run: python -Im pip install --user ruff==0.4.9
 
-    - name: Run ruff
-      working-directory: ./src
-      run: ruff --output-format=github wagtailmath
+      - name: Run ruff
+        working-directory: ./wagtail_polymath
+        run: ruff check --output-format=github
