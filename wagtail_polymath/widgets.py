@@ -1,19 +1,14 @@
 from django import forms
 from wagtail import VERSION as WAGTAIL_VERSION
-from wagtail.admin.staticfiles import versioned_static
 
-
-MATHJAX_VERSION = "2.7.9"
+from wagtail_polymath.config import get_polymath_config
 
 
 class MathJaxWidgetBase(forms.Textarea):
-    template_name = "wagtailmath/mathjaxwidget.html"
+    template_name = "wagtail_polymath/mathjaxwidget.html"
 
     def _get_media_js(self):
-        return (
-            f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML",
-            versioned_static("wagtailmath/js/wagtailmath.js"),
-        )
+        return get_polymath_config("js")
 
     @property
     def media(self):
@@ -30,10 +25,8 @@ if WAGTAIL_VERSION >= (6, 0):
             return attrs
 
         def _get_media_js(self):
-            return (
-                *super()._get_media_js(),
-                versioned_static("wagtailmath/js/wagtailmath-mathjax-controller.js"),
-            )
+            return super()._get_media_js() + get_polymath_config("widget")
+
 else:
     from wagtail.telepath import register
     from wagtail.utils.widgets import WidgetWithScript
@@ -44,10 +37,10 @@ else:
             return f'initMathJaxPreview("{id_}");'
 
     class MathJaxAdapter(WidgetAdapter):
-        js_constructor = "wagtailmath.widgets.MathJaxWidget"
+        js_constructor = "wagtail_polymath.widgets.MathJaxWidget"
 
         class Media:
             # TODO: remove the adapter when dropping support for Wagtail 5.2
-            js = ["wagtailmath/js/mathjax-textarea-adapter.js"]
+            js = get_polymath_config("widget")
 
     register(MathJaxAdapter(), MathJaxWidget)
