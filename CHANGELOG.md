@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.3.0 (2024-07-04)
+
 - Updated project tooling:
   - added linting with ruff
   - switched to using flit for packaging
