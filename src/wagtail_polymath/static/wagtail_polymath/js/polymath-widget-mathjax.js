@@ -1,3 +1,11 @@
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ["$", "$"] ],
+    displayMath: [ ["$$", "$$"] ],
+    processEscapes: true
+  }
+});
+
 // Update the preview area on input. Lifted directly from mathjax website examples
 class Preview {
 
