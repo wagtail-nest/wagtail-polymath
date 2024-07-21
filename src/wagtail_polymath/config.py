@@ -13,7 +13,7 @@ DEFAULT_MATHJAX_SETTINGS = {
         "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML",
     ],
     "widget": [
-        "wagtail_polymath/js/wagtailmath.js",
+        "wagtail_polymath/js/polymath-widget-mathjax.js",
     ],
 }
 
@@ -40,11 +40,11 @@ else:
 
 if WAGTAIL_VERSION >= (6, 0):
     DEFAULT_SETTINGS["widget"].append(
-        "wagtail_polymath/js/wagtailmath-mathjax-controller.js",
+        "wagtail_polymath/js/polymath-textarea-controller.js",
     )
 else:
     DEFAULT_SETTINGS["widget"].append(
-        "wagtail_polymath/js/mathjax-textarea-adapter.js",
+        "wagtail_polymath/js/polymath-textarea-adapter.js",
     )
 
 WAGTAILPOLYMATH_SETTINGS = DEFAULT_SETTINGS
