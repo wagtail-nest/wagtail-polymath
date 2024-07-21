@@ -1,11 +1,24 @@
 from django import template
+from django.utils.html import format_html, format_html_join
 
-from wagtail_polymath.widgets import MATHJAX_VERSION
+from wagtail_polymath.config import get_polymath_config
 
 
 register = template.Library()
 
 
 @register.simple_tag
-def mathjax(config="TeX-MML-AM_CHTML"):
-    return f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config={config}"
+def polymath_js():
+    return format_html_join(
+        "\n",
+        "{0}",
+        [
+            (
+                format_html(
+                    '<script src="{}"></script>',
+                    js,
+                ),
+            )
+            for js in get_polymath_config("js")
+        ],
+    )
