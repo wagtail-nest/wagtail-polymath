@@ -33,22 +33,22 @@ class Preview {
   }
 }
 
-function initMathJaxPreview(id) {
-  window.wagtailMathPreviews = window.WagtailMathPreviews || {};
+function initPolymathTextareaPreview(id) {
+  window.wagtailPolymathPreviews = window.WagtailPolymathPreviews || {};
 
-  window.wagtailMathPreviews[id] = new Preview(
-    "MathPreview-" + id,
-    "MathBuffer-" + id,
+  window.wagtailPolymathPreviews[id] = new Preview(
+    "PolymathTextareaPreview-" + id,
+    "PolymathTextareaBuffer-" + id,
     id,
   );
 
-  window.wagtailMathPreviews[id].render();
+  window.wagtailPolymathPreviews[id].update();
 
   // attach a keyup event listener so we update the preview
   const target = document.getElementById(id);
   if (target) {
     target.addEventListener("keyup", function () {
-      window.wagtailMathPreviews[id].update();
+      window.wagtailPolymathPreviews[id].update();
     });
   }
 }

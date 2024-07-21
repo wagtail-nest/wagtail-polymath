@@ -1,15 +1,15 @@
 (function() {
-    function MathJaxTextarea(html, config) {
+    function PolymathxTextarea(html, config) {
         this.html = html;
         this.baseConfig = config;
     }
-    MathJaxTextarea.prototype.render = function(placeholder, name, id, initialState) {
+    PolymathTextarea.prototype.render = function(placeholder, name, id, initialState) {
         placeholder.outerHTML = this.html.replace(/__NAME__/g, name).replace(/__ID__/g, id);
 
         var element = document.getElementById(id);
         element.value = initialState;
 
-        initMathJaxPreview(id);
+        initPolymathTextareaPreview(id);
 
         // define public API functions for the widget:
         // https://docs.wagtail.io/en/latest/reference/streamfield/widget_api.html
@@ -22,7 +22,7 @@
                 return element.value;
             },
             setState: function() {
-                throw new Error('MathJaxTextarea.setState is not implemented');
+                throw new Error('PolymathTextarea.setState is not implemented');
             },
             getTextLabel: function(opts) {
                 if (!element.value) return '';
@@ -36,5 +36,5 @@
         };
     };
 
-    window.telepath.register('wagtail_polymath.widgets.MathJaxWidget', MathJaxTextarea);
+    window.telepath.register('wagtail_polymath.widgets.PolymathTextareaWidget', PolymathxTextarea);
 })();

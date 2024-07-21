@@ -4,8 +4,8 @@ from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail_polymath.config import get_polymath_config
 
 
-class MathJaxWidgetBase(forms.Textarea):
-    template_name = "wagtail_polymath/mathjaxwidget.html"
+class PolymathTextareaWidgetBase(forms.Textarea):
+    template_name = "wagtail_polymath/textarea-widget.html"
 
     def _get_media_js(self):
         return get_polymath_config("js")
@@ -20,10 +20,10 @@ class MathJaxWidgetBase(forms.Textarea):
 
 if WAGTAIL_VERSION >= (6, 0):
 
-    class MathJaxWidget(MathJaxWidgetBase):
+    class PolymathTextareaWidget(PolymathTextareaWidgetBase):
         def build_attrs(self, *args, **kwargs):
             attrs = super().build_attrs(*args, **kwargs)
-            attrs["data-controller"] = "wagtailmathjax"
+            attrs["data-controller"] = "polymath-textarea-controller"
 
             return attrs
 
@@ -35,15 +35,15 @@ else:
     from wagtail.utils.widgets import WidgetWithScript
     from wagtail.widget_adapters import WidgetAdapter
 
-    class MathJaxWidget(WidgetWithScript, MathJaxWidgetBase):
+    class PolymathTextareaWidget(WidgetWithScript, PolymathTextareaWidgetBase):
         def render_js_init(self, id_, name, value):
-            return f'initMathJaxPreview("{id_}");'
+            return f'initPolymathTextareaPreview("{id_}");'
 
-    class MathJaxAdapter(WidgetAdapter):
-        js_constructor = "wagtail_polymath.widgets.MathJaxWidget"
+    class PolymathTextareaAdapter(WidgetAdapter):
+        js_constructor = "wagtail_polymath.widgets.PolymathTextareaWidget"
 
         class Media:
             # TODO: remove the adapter when dropping support for Wagtail 5.2
             js = get_polymath_config("widget")
 
-    register(MathJaxAdapter(), MathJaxWidget)
+    register(PolymathTextareaAdapter(), PolymathTextareaWidget)
