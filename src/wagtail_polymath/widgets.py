@@ -10,9 +10,12 @@ class MathJaxWidgetBase(forms.Textarea):
     def _get_media_js(self):
         return get_polymath_config("js")
 
+    def _get_media_css(self):
+        return {"all": get_polymath_config("css")}
+
     @property
     def media(self):
-        return forms.Media(js=self._get_media_js())
+        return forms.Media(js=self._get_media_js(), css=self._get_media_css())
 
 
 if WAGTAIL_VERSION >= (6, 0):
