@@ -22,3 +22,20 @@ def polymath_js():
             for js in get_polymath_config("js")
         ],
     )
+
+
+@register.simple_tag
+def polymath_css():
+    return format_html_join(
+        "\n",
+        "{0}",
+        [
+            (
+                format_html(
+                    '<link rel="stylesheet" href="{}">',
+                    css,
+                ),
+            )
+            for css in get_polymath_config("css")
+        ],
+    )
