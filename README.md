@@ -13,31 +13,14 @@
 - [Discussions](https://github.com/wagtail-nest/wagtail-polymath/discussions)
 - [Security](https://github.com/wagtail-nest/wagtail-polymath/security)
 
-wagtail-polymath allows you to write equations in your
-[Wagtail](https://github.com/wagtail/wagtail) content using markup and
-render them beautifully.
+`wagtail-polymath` provides robust math typesetting capabilities in LaTeX syntax.
+This project supports multiple typesetting engines, including MathJax and KaTeX, allowing users to choose the one that best fits their needs.
 
-wagtail-polymath provides a `MathBlock` so you can write equations in markup
-(TeX, MathML, ASCIIMath) and render them with MathJax. It features a
-live preview:
+- [LaTeX Syntax Support](https://en.wikibooks.org/wiki/LaTeX/Mathematics): Write complex mathematical expressions using familiar LaTeX syntax.
+- Multiple Typesetting Engines: Currently, [MathJax](https://www.mathjax.org/) (default) and [KaTeX](https://katex.org/) are supported.
+- Live preview.
 
 ![](https://github.com/wagtail-nest/wagtail-polymath/blob/main/docs/images/mathblock.png)
-
-`MathBlock` uses MathJax for rendering so there is very little to do on
-the front end. Simply include the MathJax JS and render the raw
-`MathBlock` content as you would for any other streamfield plain text
-block.
-
-wagtail-polymath even includes a template tag to include the MathJax JS for
-you from a CDN. By default, MathJax is configured to accept all
-recognised markup (TeX, MathML, ASCIIMath) and renders them to HTML. To
-change the configuration, you can pass the desired config command to the
-templatetag. See the [MathJax documentation](https://docs.mathjax.org/en/v2.7-latest/config-files.html#combined-configurations)
-for possible configurations.
-
-For help on using the markup languages see the relevant MathJax
-documentation (e.g. https://docs.mathjax.org/en/v2.7-latest/tex.html) and
-the markup language-specific documentation (e.g. https://en.wikibooks.org/wiki/LaTeX)
 
 ## Quickstart
 
@@ -63,22 +46,82 @@ Use `MathBlock` in your `StreamField` content:
 from wagtail_polymath.blocks import MathBlock
 
 class MyPage(Page):
-    body = StreamField([
-        ('heading', blocks.CharBlock(classname="full title")),
-        ('paragraph', blocks.RichTextBlock()),
-        ('equation', MathBlock())
-    ])
+    body = StreamField(
+        [
+            ('heading', blocks.CharBlock(classname="full title")),
+            ('paragraph', blocks.RichTextBlock()),
+            ('equation', MathBlock())
+        ],
+        use_json_field=True,
+    )
+
+    content_panels = Page.content_panels + [FieldPanel("body")]
 ```
 
-Use the `mathjax` template tag in your front end template to load the
-MathJax library:
+Use the `polymath_js` template tag in your front-end template to load the typesetting library:
 
 ```django+html
 {% load wagtail_polymath %}
-...
 
-<script src="{% mathjax %}"></script>
+{# include this line in css block #}
+{% polymath_css %}
+
+{# include this line in js block #}
+{% polymath_js %}
 ```
+
+Now you can use LaTeX syntax in your StreamField editor to create mathematical expressions.
+By default, `wagtail-polymath` uses MathJax for rendering, but KaTeX is also supported (see below).
+
+## Settings
+
+### WAGTAILPOLYMATH_ENGINE
+
+If you wants to use KaTeX instead of MathJax, simply add the following line to your Django settings:
+
+```python
+WAGTAILPOLYMATH_ENGINE = "katex"
+```
+
+This value is set to "mathjax" by default.
+
+### WAGTAILPOLYMATH_SETTINGS
+
+For those who want to specify the CDN provider or for internal site hosting.
+The rendering javascript library path can be customized for different use cases.
+
+Default settings for `MathJax`:
+
+```python
+WAGTAILPOLYMATH_SETTINGS = {
+    "js": [
+        "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML",
+    ],
+}
+```
+
+Default settings for `KaTeX`:
+
+```python
+WAGTAILPOLYMATH_SETTINGS = {
+    "js": [
+        "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js",
+        "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js",
+    ],
+    "css": ["https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"],
+}
+```
+
+## Migration from `wagtail-math`
+
+- Django settings:
+  - Replace "wagtailmath" with "wagtail_polymath" in `INSTALLED_APPS`
+- Import section:
+  - Replace "from wagtailmath.blocks import MathBlock" with "from wagtail_polymath.blocks import MathBlock"
+- HTML template:
+  - Replace "wagtailmath" with "wagtail_polymath" in the load section
+  - Add "{% polymath_css %}" to the css block
+  - Replace "<script src={% mathjax %}></script>" with "{% polymath_js %}" in the js block
 
 ## Contributing
 
