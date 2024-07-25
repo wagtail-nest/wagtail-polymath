@@ -2,7 +2,8 @@ from wagtail import blocks
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Page
-from wagtailmath.blocks import MathBlock
+
+from wagtail_polymath.blocks import MathBlock
 
 
 class MathPage(Page):

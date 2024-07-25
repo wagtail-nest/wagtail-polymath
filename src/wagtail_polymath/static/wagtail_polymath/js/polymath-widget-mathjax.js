@@ -1,3 +1,11 @@
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ["$", "$"] ],
+    displayMath: [ ["$$", "$$"] ],
+    processEscapes: true
+  }
+});
+
 // Update the preview area on input. Lifted directly from mathjax website examples
 class Preview {
 
@@ -80,25 +88,25 @@ class Preview {
 }
 
 
-function initMathJaxPreview(id) {
-  window.wagtailMathPreviews = window.WagtailMathPreviews || {};
+function initPolymathTextareaPreview(id) {
+  window.wagtailPolymathPreviews = window.WagtailPolymathPreviews || {};
 
-  window.wagtailMathPreviews[id] = new Preview(
-    "MathPreview-" + id,
-    "MathBuffer-" + id,
+  window.wagtailPolymathPreviews[id] = new Preview(
+    "PolymathTextareaPreview-" + id,
+    "PolymathTextareaBuffer-" + id,
     id
   );
 
   // Cache a callback to the CreatePreview action
-  window.wagtailMathPreviews[id].callback = MathJax.Callback(["CreatePreview", window.wagtailMathPreviews[id]]);
-  window.wagtailMathPreviews[id].callback.autoReset = true; // make sure it can run more than once
-  window.wagtailMathPreviews[id].Update();
+  window.wagtailPolymathPreviews[id].callback = MathJax.Callback(["CreatePreview", window.wagtailPolymathPreviews[id]]);
+  window.wagtailPolymathPreviews[id].callback.autoReset = true; // make sure it can run more than once
+  window.wagtailPolymathPreviews[id].Update();
 
   // attach a keyup event listener so we update the preview
   const target = document.getElementById(id);
   if (target) {
     target.addEventListener("keyup", function() {
-      window.wagtailMathPreviews[id].Update();
+      window.wagtailPolymathPreviews[id].Update();
     })
   }
 }
