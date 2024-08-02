@@ -64,6 +64,7 @@ exclude = [
     "*.ini",
     "*.yml",
     "ruff.toml",
+    "Makefile",
 ]
 
 [tool.pytest.ini_options]
