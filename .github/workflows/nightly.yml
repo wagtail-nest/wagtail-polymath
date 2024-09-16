@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WEBHOOK_EXISTS: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
-    if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+    if: ${{ env.WEBHOOK_EXISTS }}
 
     steps:
       - uses: actions/checkout@v4
