@@ -6,12 +6,13 @@ on:
     # At 01:00, daily
   workflow_dispatch:
 
+env:
+  WEBHOOK_EXISTS: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+
 jobs:
   nightly-wagtail-test:
     runs-on: ubuntu-latest
-    env:
-      WEBHOOK_EXISTS: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
-    if: ${{ env.WEBHOOK_EXISTS }}
+    if: ${{ vars.WEBHOOK_EXISTS }}
 
     steps:
       - uses: actions/checkout@v4
