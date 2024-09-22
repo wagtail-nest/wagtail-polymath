@@ -151,3 +151,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "test-media")
 
 WAGTAIL_SITE_NAME = "Wagtail Polymath test site"
 WAGTAILADMIN_BASE_URL = "http://localhost:8020"
+
+# Wagtail-polymath settings
+WAGTAILPOLYMATH_ENGINE = os.environ.setdefault("WAGTAILPOLYMATH_ENGINE", "mathjax")
