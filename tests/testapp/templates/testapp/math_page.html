@@ -1,7 +1,7 @@
-{% load wagtailmath %}
+{% load wagtail_polymath %}
 <html>
 <head>
-    <script src="{% mathjax %}"></script>
+    {% polymath_js %}
 </head>
 <body>
 <h1>{{ page.title }}</h1>

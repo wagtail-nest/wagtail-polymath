@@ -33,7 +33,7 @@ IS_INTERACTIVE = "INTERACTIVE" in os.environ
 # Application definition
 
 INSTALLED_APPS = [
-    "wagtailmath",
+    "wagtail_polymath",
     "testapp",
     "wagtail.users",
     "wagtail.snippets",
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "wagtail.images",
     "wagtail.search",
     "wagtail.admin",
+    "wagtail.contrib.redirects",
     "wagtail.contrib.routable_page",
     "wagtail.contrib.styleguide",
     "wagtail.sites",
@@ -150,3 +151,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "test-media")
 
 WAGTAIL_SITE_NAME = "Wagtail Polymath test site"
 WAGTAILADMIN_BASE_URL = "http://localhost:8020"
+
+# Wagtail-polymath settings
+WAGTAIL_POLYMATH = os.environ.setdefault("WAGTAIL_POLYMATH", "mathjax")
