@@ -75,25 +75,19 @@ By default, `wagtail-polymath` uses MathJax for rendering, but KaTeX is also sup
 
 ## Settings
 
-### WAGTAILPOLYMATH_ENGINE
-
 If you wants to use KaTeX instead of MathJax, simply add the following line to your Django settings:
 
 ```python
-WAGTAILPOLYMATH_ENGINE = "katex"
+WAGTAIL_POLYMATH = "katex"
 ```
 
-This value is set to "mathjax" by default.
-
-### WAGTAILPOLYMATH_SETTINGS
-
 For those who want to specify the CDN provider or for internal site hosting.
-The rendering javascript library path can be customized for different use cases.
+The rendering javascript library path (file path for static files also supported) can be customized for different use cases.
 
 Default settings for `MathJax`:
 
 ```python
-WAGTAILPOLYMATH_SETTINGS = {
+WAGTAIL_POLYMATH = {
     "js": [
         "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML",
     ],
@@ -103,7 +97,7 @@ WAGTAILPOLYMATH_SETTINGS = {
 Default settings for `KaTeX`:
 
 ```python
-WAGTAILPOLYMATH_SETTINGS = {
+WAGTAIL_POLYMATH = {
     "js": [
         "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js",
         "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js",
