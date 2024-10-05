@@ -5,8 +5,6 @@ from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail.admin.staticfiles import versioned_static
 
 
-TYPESETTING_ENGINE = getattr(settings, "WAGTAILPOLYMATH_ENGINE", "mathjax")
-
 # The path could be static files or external URLs.
 DEFAULT_MATHJAX_SETTINGS = {
     "js": [
@@ -28,31 +26,33 @@ DEFAULT_KATEX_SETTINGS = {
     "css": ["https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"],
 }
 
-if TYPESETTING_ENGINE == "mathjax":
-    DEFAULT_SETTINGS = DEFAULT_MATHJAX_SETTINGS
-elif TYPESETTING_ENGINE == "katex":
-    DEFAULT_SETTINGS = DEFAULT_KATEX_SETTINGS
+polymath_settings = getattr(settings, "WAGTAIL_POLYMATH", "mathjax")
+if isinstance(polymath_settings, str):
+    if polymath_settings == "mathjax":
+        POLYMATH_SETTINGS = DEFAULT_MATHJAX_SETTINGS
+    elif polymath_settings == "katex":
+        POLYMATH_SETTINGS = DEFAULT_KATEX_SETTINGS
+    else:
+        raise ImproperlyConfigured(
+            f"WAGTAIL_POLYMATH: invalid typesetting engine: `{polymath_settings}` (valid options: 'mathjax', 'katex')"
+        )
+elif isinstance(polymath_settings, dict):
+    POLYMATH_SETTINGS = polymath_settings
 else:
-    raise ImproperlyConfigured(
-        f"WAGTAILPOLYMATH_ENGINE: invalid typesetting engine: `{TYPESETTING_ENGINE}` "
-        "(valid options: 'mathjax', 'katex')"
-    )
+    raise ImproperlyConfigured("WAGTAIL_POLYMATH: invalid settings")
 
 if WAGTAIL_VERSION >= (6, 0):
-    DEFAULT_SETTINGS["widget"].append(
+    POLYMATH_SETTINGS["widget"].append(
         "wagtail_polymath/js/polymath-textarea-controller.js",
     )
 else:
-    DEFAULT_SETTINGS["widget"].append(
+    POLYMATH_SETTINGS["widget"].append(
         "wagtail_polymath/js/polymath-textarea-adapter.js",
     )
 
-WAGTAILPOLYMATH_SETTINGS = DEFAULT_SETTINGS
-WAGTAILPOLYMATH_SETTINGS.update(getattr(settings, "WAGTAILPOLYMATH_SETTINGS", {}))
-
 
 def get_polymath_config(key):
-    paths = WAGTAILPOLYMATH_SETTINGS.get(key, [])
+    paths = POLYMATH_SETTINGS.get(key, [])
 
     # Return absolute path to the asset if it's a static file path.
     return [versioned_static(path) if finders.find(path) else path for path in paths]
