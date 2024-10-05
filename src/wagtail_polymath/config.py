@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.staticfiles import finders
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ValidationError
+from django.core.validators import URLValidator
 from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail.admin.staticfiles import versioned_static
 
@@ -54,5 +55,25 @@ else:
 def get_polymath_config(key):
     paths = POLYMATH_SETTINGS.get(key, [])
 
-    # Return absolute path to the asset if it's a static file path.
-    return [versioned_static(path) if finders.find(path) else path for path in paths]
+    validator = URLValidator()
+
+    validated_paths = []
+    for path in paths:
+        if path.startswith("http"):
+            try:
+                validator(path)
+            except ValidationError as e:
+                raise ImproperlyConfigured(
+                    f"WAGTAIL_POLYMATH: invalid url: `{path}`"
+                ) from e
+            validated_paths.append(path)
+        else:
+            # Return absolute path to the asset if it's a static file path.
+            if finders.find(path):
+                validated_paths.append(versioned_static(path))
+            else:
+                raise ImproperlyConfigured(
+                    f"WAGTAIL_POLYMATH: invalid resource path: `{path}`"
+                )
+
+    return validated_paths
