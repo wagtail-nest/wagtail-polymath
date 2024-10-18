@@ -81,7 +81,7 @@ class Preview {
 
 
 function initMathJaxPreview(id) {
-  window.wagtailMathPreviews = window.WagtailMathPreviews || {};
+  window.wagtailMathPreviews = window.wagtailMathPreviews || {};
 
   window.wagtailMathPreviews[id] = new Preview(
     "MathPreview-" + id,
