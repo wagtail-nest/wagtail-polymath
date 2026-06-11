@@ -8,17 +8,30 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
 jobs:
   ruff:
     name: Ruff
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          persist-credentials: false
 
-    # Keep in sync with .pre-comit-config.yaml
-    - run: python -Im pip install --user ruff==0.15.16
+      - name: Install Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
+        with:
+          python-version: "3.14"
+      - name: Install dependencies
+      # Keep in sync with .pre-comit-config.yaml
+      - run: python -Im pip install ruff==0.15.16
 
-    - name: Run ruff
-      working-directory: ./src
-      run: ruff check --output-format=github wagtailmath
+      - name: Run ruff
+        working-directory: ./src
+        run: ruff check --output-format=github wagtailmath
