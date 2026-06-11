@@ -29,8 +29,8 @@ jobs:
         with:
           python-version: "3.14"
       - name: Install dependencies
-      # Keep in sync with .pre-comit-config.yaml
-      - run: python -Im pip install ruff==0.15.16
+        # Keep in sync with .pre-comit-config.yaml
+        run: python -Im pip install ruff==0.15.16
 
       - name: Run ruff
         working-directory: ./src
