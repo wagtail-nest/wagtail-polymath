@@ -23,7 +23,7 @@ env:
   PYTHON_LATEST: "3.14"
 
 jobs:
-  test-sqlite:
+  tests:
     name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     permissions:
