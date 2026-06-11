@@ -2,19 +2,16 @@
 branch = True
 concurrency = multiprocessing, thread
 parallel = True
-source_pkgs = wagtailmath
-omit =
-    **/migrations/*
-    tests/*
+source = src/
+omit = **/migrations/*,tests/*
 
 [paths]
-source =
-    src/wagtailmath
-    .tox/py*/**/site-packages
+source = src,.tox/py*/**/site-packages
 
 [report]
 show_missing = True
 ignore_errors = True
+skip_empty = true
 skip_covered = True
 
 # Regexes for lines to exclude from consideration
