@@ -1,6 +1,6 @@
 from django import template
 
-from wagtailmath.widgets import MATHJAX_VERSION
+from wagtail_polymath.widgets import MATHJAX_VERSION
 
 
 register = template.Library()

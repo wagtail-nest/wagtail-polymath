@@ -6,7 +6,7 @@ MATHJAX_VERSION = "2.7.9"
 
 
 class MathJaxWidget(forms.Textarea):
-    template_name = "wagtailmath/mathjaxwidget.html"
+    template_name = "wagtail_polymath/mathjaxwidget.html"
 
     def build_attrs(self, *args, **kwargs):
         attrs = super().build_attrs(*args, **kwargs)
@@ -19,7 +19,9 @@ class MathJaxWidget(forms.Textarea):
         return forms.Media(
             js=(
                 f"https://cdnjs.cloudflare.com/ajax/libs/mathjax/{MATHJAX_VERSION}/MathJax.js?config=TeX-MML-AM_HTMLorMML",
-                versioned_static("wagtailmath/js/wagtailmath.js"),
-                versioned_static("wagtailmath/js/wagtailmath-mathjax-controller.js"),
+                versioned_static("wagtail_polymath/js/wagtail_polymath.js"),
+                versioned_static(
+                    "wagtail_polymath/js/wagtail_polymath-mathjax-controller.js"
+                ),
             )
         )

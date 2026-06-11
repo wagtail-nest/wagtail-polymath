@@ -34,4 +34,4 @@ jobs:
 
       - name: Run ruff
         working-directory: ./src
-        run: ruff check --output-format=github wagtailmath
+        run: ruff check --output-format=github wagtail_polymath
