@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Dropped support for Django < 5.2
 - Upgraded to MathJax 4.1.2, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
   for the CDN script. The template tag has also changed to `mathjax_script`. See upgrade considerations
 
