@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+- Upgraded to MathJax 4.1.2, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
+  for the CDN script. The template tag has also changed to `mathjax_script`. See upgrade considerations
+
+### Upgrade considerations
+
+#### The project namespace changed to `wagtail_polymath`
+
+```diff
+# Old
+- from wagtailmath.blocks import MathBlock
+# New
++ from wagtail_polymath.blocks import MathBlock
+```
+
+and
+
+```diff
+# Old
+- {% load wagtailmath %}
+# New
++ {% load wagtail_polymath %}
+```
+
+#### The template tag has changed
+The `mathjax` template tag has changed to `mathjax_script` and should no longer be wrapped in `<script></script>`
+
+```diff
+# Old
+- {% load wagtailmath %}
+- <script src="{% mathjax %}"></script>
+# New
++ {% load wagtail_polymath %}
++ {% mathjax_script %}
+```
+
 ## 2.0.0.dev1 (2026-06-18)
 
 - The project namespace has changed from wagtailmath to wagtail_polymath.
