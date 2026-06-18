@@ -2,7 +2,7 @@
 
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![PyPI version](https://img.shields.io/pypi/v/wagtailmath.svg?style=flat)](https://pypi.org/project/wagtailmath)
+[![PyPI version](https://img.shields.io/pypi/v/wagtailmath.svg?style=flat)](https://pypi.org/project/wagtail-polymath)
 [![Build status](https://img.shields.io/github/actions/workflow/status/wagtail-nest/wagtail-polymath/test.yml?branch=main)](https://github.com/wagtail-nest/wagtail-polymath/actions)
 
 ## Links
@@ -41,9 +41,9 @@ the markup language-specific documentation (e.g. https://en.wikibooks.org/wiki/L
 
 ## Quickstart
 
-Install wagtailmath:
+Install wagtail_polymath:
 
-    pip install wagtailmath
+    pip install wagtail_polymath
 
 Add it to your `INSTALLED_APPS`:
 
@@ -52,7 +52,7 @@ Add it to your `INSTALLED_APPS`:
 
 INSTALLED_APPS = (
     # ...
-    "wagtailmath",
+    "wagtail_polymath",
     # ...
 )
 ```
@@ -60,7 +60,8 @@ INSTALLED_APPS = (
 Use `MathBlock` in your `StreamField` content:
 
 ```python
-from wagtailmath.blocks import MathBlock
+from wagtail_polymath.blocks import MathBlock
+
 
 class MyPage(Page):
     body = StreamField([
@@ -74,7 +75,7 @@ Use the `mathjax` template tag in your front end template to load the
 MathJax library:
 
 ```django+html
-{% load wagtailmath %}
+{% load wagtail_polymath %}
 ...
 
 <script src="{% mathjax %}"></script>
@@ -87,6 +88,6 @@ All contributions are welcome! See [CONTRIBUTING.md](https://github.com/wagtail-
 
 Supported versions:
 
-- Python 3.8, 3.9, 3.10, 3.11, 3.12
-- Django 4.2, 5.0
-- Wagtail 5.2 (LTS), 6.0, 6.1
+- Python 3.10-3.14
+- Django 5.2, 6.0
+- Wagtail 7.0 (LTS), 7.3, 7.4 (LTS)
