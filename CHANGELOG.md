@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2.0.0.dev1 (2026-06-17)
+## 2.0.0.dev1 (2026-06-18)
 
 - The project namespace has changed from wagtailmath to wagtail_polymath.
   Example: `from wagtailmath.blocks import MathBlock` → `from wagtail_polymath.blocks import MathBlock`
