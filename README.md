@@ -71,14 +71,14 @@ class MyPage(Page):
     ])
 ```
 
-Use the `mathjax` template tag in your front end template to load the
+Use the `mathjax_script` template tag in your front end template to load the
 MathJax library:
 
 ```django+html
 {% load wagtail_polymath %}
 ...
 
-<script src="{% mathjax %}"></script>
+{% mathjax_script %}
 ```
 
 
