@@ -1,9 +1,6 @@
 from django import template
-from django.forms.utils import flatatt
-from django.utils.html import format_html
+from django.forms import Script
 from wagtail.admin.staticfiles import versioned_static
-
-from wagtail_polymath.widgets import MATHJAX_SRI, MATHJAX_VERSION
 
 
 register = template.Library()
@@ -11,10 +8,10 @@ register = template.Library()
 
 @register.simple_tag
 def mathjax_script():
-    attributes = {"crossorigin": "anonymous", "integrity": MATHJAX_SRI, "defer": True}
-    return format_html(
-        '<script src="{init_path}"></script><script src="{path}"{attributes}></script>',
-        init_path=versioned_static("wagtail_polymath/js/mathjax_init.js"),
-        path=f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
-        attributes=flatatt(attributes),
+    init_script = Script(versioned_static("wagtail_polymath/js/mathjax_init.js"))
+    library = Script(
+        versioned_static("wagtail_polymath/js/vendor/mathjax/tex-mml-chtml.js"),
+        defer=True,
     )
+
+    return str(init_script) + str(library)
