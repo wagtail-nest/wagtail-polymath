@@ -81,6 +81,41 @@ MathJax library:
 {% mathjax_script %}
 ```
 
+## Configuration
+
+By default, wagtail-polymath loads MathJax from jsdelivr, pinned to a specific
+version with a matching [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
+(SRI) hash, so the browser can verify the script hasn't been tampered with.
+
+If you'd rather load MathJax from a different CDN, your own static files, or
+a different version, set `WAGTAILPOLYMATH_MATHJAX_URL` to the full script URL:
+
+```python
+# settings.py
+WAGTAILPOLYMATH_MATHJAX_URL = "https://example.com/path/to/tex-mml-chtml.js"
+```
+
+Since we can't know the SRI hash for a script we don't control, setting a
+custom URL on its own disables integrity checking for that script (no
+`integrity`/`crossorigin` attributes are rendered). If you want that
+protection back, also set `WAGTAILPOLYMATH_MATHJAX_SRI` to the hash for your
+chosen file:
+
+```python
+# settings.py
+WAGTAILPOLYMATH_MATHJAX_URL = "https://example.com/path/to/tex-mml-chtml.js"
+WAGTAILPOLYMATH_MATHJAX_SRI = "sha256-..."
+```
+
+`WAGTAILPOLYMATH_MATHJAX_SRI` has no effect unless `WAGTAILPOLYMATH_MATHJAX_URL`
+is also set — the built-in default URL always uses its own pinned hash.
+
+Both settings apply to the MathJax script loaded in the Wagtail admin (for
+the `MathBlock` live preview) and the one loaded by the `mathjax_script`
+template tag. Note that the bundled preview JS assumes MathJax's combined
+`tex-mml-chtml` component and its `input/asciimath` loader — if you switch to
+a different version or build of MathJax, you're responsible for keeping it
+compatible with that configuration.
 
 ## Contributing
 
