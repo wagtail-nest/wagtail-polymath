@@ -2,9 +2,7 @@ from django import forms
 from django.forms import Script
 from wagtail.admin.staticfiles import versioned_static
 
-
-MATHJAX_VERSION = "4.1.2"
-MATHJAX_SRI = "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU="
+from .settings import get_mathjax_integrity, get_mathjax_url
 
 
 class MathJaxWidget(forms.Textarea):
@@ -18,16 +16,15 @@ class MathJaxWidget(forms.Textarea):
 
     @property
     def media(self):
+        attrs = {"defer": True}
+        integrity = get_mathjax_integrity()
+        if integrity:
+            attrs["crossorigin"] = "anonymous"
+            attrs["integrity"] = integrity
+
         return forms.Media(
             js=(
-                Script(
-                    f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
-                    **{
-                        "crossorigin": "anonymous",
-                        "integrity": MATHJAX_SRI,
-                        "defer": True,
-                    },
-                ),
+                Script(get_mathjax_url(), **attrs),
                 versioned_static("wagtail_polymath/js/wagtail_polymath.js"),
                 versioned_static(
                     "wagtail_polymath/js/wagtail_polymath-mathjax-controller.js"

@@ -3,7 +3,7 @@ from django.forms.utils import flatatt
 from django.utils.html import format_html
 from wagtail.admin.staticfiles import versioned_static
 
-from wagtail_polymath.widgets import MATHJAX_SRI, MATHJAX_VERSION
+from wagtail_polymath.settings import get_mathjax_integrity, get_mathjax_url
 
 
 register = template.Library()
@@ -11,10 +11,15 @@ register = template.Library()
 
 @register.simple_tag
 def mathjax_script():
-    attributes = {"crossorigin": "anonymous", "integrity": MATHJAX_SRI, "defer": True}
+    attributes = {"defer": True}
+    integrity = get_mathjax_integrity()
+    if integrity:
+        attributes["crossorigin"] = "anonymous"
+        attributes["integrity"] = integrity
+
     return format_html(
         '<script src="{init_path}"></script><script src="{path}"{attributes}></script>',
         init_path=versioned_static("wagtail_polymath/js/mathjax_init.js"),
-        path=f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
+        path=get_mathjax_url(),
         attributes=flatatt(attributes),
     )
