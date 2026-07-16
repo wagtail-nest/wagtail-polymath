@@ -116,6 +116,23 @@ WAGTAIL_POLYMATH = {
 `mathjax_sri` has no effect unless `mathjax_url` is also set — the built-in
 default URL always uses its own pinned hash.
 
+To generate the hash for your chosen file, download it and use `openssl`.
+Note that the `integrity` attribute requires a **base64**-encoded digest —
+`sha256sum`/`shasum` produce a hex digest instead, which will not work:
+
+```sh
+openssl dgst -sha256 -binary tex-mml-chtml.js | openssl base64 -A
+```
+
+Prefix the output with `sha256-` to get the full `mathjax_sri` value:
+
+```python
+WAGTAIL_POLYMATH = {
+    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "mathjax_sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+}
+```
+
 Both settings apply to the MathJax script loaded in the Wagtail admin (for
 the `MathBlock` live preview) and the one loaded by the `mathjax_script`
 template tag. Note that the bundled preview JS assumes MathJax's combined
