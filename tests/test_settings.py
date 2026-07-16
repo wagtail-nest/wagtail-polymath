@@ -1,8 +1,7 @@
 from wagtail_polymath.settings import (
     MATHJAX_DEFAULT_SRI,
     MATHJAX_DEFAULT_URL,
-    get_mathjax_integrity,
-    get_mathjax_url,
+    wagtail_polymath_settings,
 )
 from wagtail_polymath.templatetags.wagtail_polymath import mathjax_script
 from wagtail_polymath.widgets import MathJaxWidget
@@ -17,13 +16,13 @@ def widget_media_html():
 
 
 class TestDefaultMathJaxSettings:
-    """No WAGTAILPOLYMATH_MATHJAX_* settings configured."""
+    """No WAGTAIL_POLYMATH setting configured."""
 
-    def test_get_mathjax_url_returns_default(self):
-        assert get_mathjax_url() == MATHJAX_DEFAULT_URL
+    def test_mathjax_url_returns_default(self):
+        assert wagtail_polymath_settings.mathjax_url == MATHJAX_DEFAULT_URL
 
-    def test_get_mathjax_integrity_returns_default(self):
-        assert get_mathjax_integrity() == MATHJAX_DEFAULT_SRI
+    def test_mathjax_sri_returns_default(self):
+        assert wagtail_polymath_settings.mathjax_sri == MATHJAX_DEFAULT_SRI
 
     def test_widget_media_uses_default_url_and_integrity(self):
         html = widget_media_html()
@@ -39,18 +38,18 @@ class TestDefaultMathJaxSettings:
 
 
 class TestCustomUrlOnly:
-    """WAGTAILPOLYMATH_MATHJAX_URL set, no matching SRI hash supplied."""
+    """WAGTAIL_POLYMATH["mathjax_url"] set, no matching SRI hash supplied."""
 
-    def test_get_mathjax_url_returns_custom_url(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
-        assert get_mathjax_url() == CUSTOM_URL
+    def test_mathjax_url_returns_custom_url(self, settings):
+        settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
+        assert wagtail_polymath_settings.mathjax_url == CUSTOM_URL
 
-    def test_get_mathjax_integrity_is_none(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
-        assert get_mathjax_integrity() is None
+    def test_mathjax_sri_is_none(self, settings):
+        settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
+        assert wagtail_polymath_settings.mathjax_sri is None
 
     def test_widget_media_omits_integrity(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
+        settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
         html = widget_media_html()
         assert CUSTOM_URL in html
         assert MATHJAX_DEFAULT_URL not in html
@@ -58,7 +57,7 @@ class TestCustomUrlOnly:
         assert "crossorigin" not in html
 
     def test_template_tag_omits_integrity(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
+        settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
         html = mathjax_script()
         assert CUSTOM_URL in html
         assert "integrity" not in html
@@ -66,31 +65,37 @@ class TestCustomUrlOnly:
 
 
 class TestCustomUrlAndSri:
-    """Both WAGTAILPOLYMATH_MATHJAX_URL and WAGTAILPOLYMATH_MATHJAX_SRI set."""
+    """Both mathjax_url and mathjax_sri set in WAGTAIL_POLYMATH."""
 
-    def test_get_mathjax_integrity_returns_custom_sri(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
-        settings.WAGTAILPOLYMATH_MATHJAX_SRI = CUSTOM_SRI
-        assert get_mathjax_integrity() == CUSTOM_SRI
+    def test_mathjax_sri_returns_custom_sri(self, settings):
+        settings.WAGTAIL_POLYMATH = {
+            "mathjax_url": CUSTOM_URL,
+            "mathjax_sri": CUSTOM_SRI,
+        }
+        assert wagtail_polymath_settings.mathjax_sri == CUSTOM_SRI
 
     def test_widget_media_uses_custom_url_and_integrity(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
-        settings.WAGTAILPOLYMATH_MATHJAX_SRI = CUSTOM_SRI
+        settings.WAGTAIL_POLYMATH = {
+            "mathjax_url": CUSTOM_URL,
+            "mathjax_sri": CUSTOM_SRI,
+        }
         html = widget_media_html()
         assert CUSTOM_URL in html
         assert f'integrity="{CUSTOM_SRI}"' in html
         assert 'crossorigin="anonymous"' in html
 
     def test_template_tag_uses_custom_url_and_integrity(self, settings):
-        settings.WAGTAILPOLYMATH_MATHJAX_URL = CUSTOM_URL
-        settings.WAGTAILPOLYMATH_MATHJAX_SRI = CUSTOM_SRI
+        settings.WAGTAIL_POLYMATH = {
+            "mathjax_url": CUSTOM_URL,
+            "mathjax_sri": CUSTOM_SRI,
+        }
         html = mathjax_script()
         assert CUSTOM_URL in html
         assert f'integrity="{CUSTOM_SRI}"' in html
         assert 'crossorigin="anonymous"' in html
 
     def test_sri_ignored_without_matching_url(self, settings):
-        """The SRI setting alone (no custom URL) must not affect the default."""
-        settings.WAGTAILPOLYMATH_MATHJAX_SRI = CUSTOM_SRI
-        assert get_mathjax_url() == MATHJAX_DEFAULT_URL
-        assert get_mathjax_integrity() == MATHJAX_DEFAULT_SRI
+        """The mathjax_sri key alone (no mathjax_url) must not affect the default."""
+        settings.WAGTAIL_POLYMATH = {"mathjax_sri": CUSTOM_SRI}
+        assert wagtail_polymath_settings.mathjax_url == MATHJAX_DEFAULT_URL
+        assert wagtail_polymath_settings.mathjax_sri == MATHJAX_DEFAULT_SRI
