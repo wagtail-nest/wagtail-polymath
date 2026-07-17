@@ -5,6 +5,9 @@
 - Dropped support for Django < 5.2
 - Upgraded to MathJax 4.1.2, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
   for the CDN script. The template tag has also changed to `mathjax_script`. See upgrade considerations
+- Added a `WAGTAIL_POLYMATH` settings dict, with `mathjax_url` and `mathjax_sri` keys, to allow
+  loading MathJax from a different CDN, or self-hosted, instead of the pinned jsdelivr default.
+  See [Configuration](README.md#configuration)
 
 ### Upgrade considerations
 
@@ -37,6 +40,12 @@ The `mathjax` template tag has changed to `mathjax_script` and should no longer 
 + {% load wagtail_polymath %}
 + {% mathjax_script %}
 ```
+
+#### `MATHJAX_VERSION`/`MATHJAX_SRI` moved out of `widgets.py`
+These were never documented as public API, but if you imported them
+directly, they now live in `wagtail_polymath.settings`, which also exposes
+a `wagtail_polymath_settings` object (`.mathjax_url`/`.mathjax_sri`) for
+reading the effective, resolved settings.
 
 ## 2.0.0.dev1 (2026-06-18)
 

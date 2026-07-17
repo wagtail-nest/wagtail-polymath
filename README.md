@@ -81,6 +81,64 @@ MathJax library:
 {% mathjax_script %}
 ```
 
+## Configuration
+
+All `wagtail-polymath` settings are defined in a single `WAGTAIL_POLYMATH`
+dictionary in your settings file.
+
+By default, wagtail-polymath loads MathJax from jsdelivr, pinned to a specific
+version with a matching [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
+(SRI) hash, so the browser can verify the script hasn't been tampered with.
+
+If you'd rather load MathJax from a different CDN, your own static files, or
+a different version, set `mathjax_url` to the full script URL:
+
+```python
+# settings.py
+WAGTAIL_POLYMATH = {
+    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
+}
+```
+
+Since we can't know the SRI hash for a script we don't control, setting a
+custom URL on its own disables integrity checking for that script (no
+`integrity`/`crossorigin` attributes are rendered). If you want that
+protection back, also set `mathjax_sri` to the hash for your chosen file:
+
+```python
+# settings.py
+WAGTAIL_POLYMATH = {
+    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "mathjax_sri": "sha256-...",
+}
+```
+
+`mathjax_sri` has no effect unless `mathjax_url` is also set — the built-in
+default URL always uses its own pinned hash.
+
+To generate the hash for your chosen file, download it and use `openssl`.
+Note that the `integrity` attribute requires a **base64**-encoded digest —
+`sha256sum`/`shasum` produce a hex digest instead, which will not work:
+
+```sh
+openssl dgst -sha256 -binary tex-mml-chtml.js | openssl base64 -A
+```
+
+Prefix the output with `sha256-` to get the full `mathjax_sri` value:
+
+```python
+WAGTAIL_POLYMATH = {
+    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "mathjax_sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+}
+```
+
+Both settings apply to the MathJax script loaded in the Wagtail admin (for
+the `MathBlock` live preview) and the one loaded by the `mathjax_script`
+template tag. Note that the bundled preview JS assumes MathJax's combined
+`tex-mml-chtml` component and its `input/asciimath` loader — if you switch to
+a different version or build of MathJax, you're responsible for keeping it
+compatible with that configuration.
 
 ## Contributing
 
