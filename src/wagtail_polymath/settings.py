@@ -18,8 +18,8 @@ class WagtailPolymathSettings:
 
     @property
     def _user_settings(self):
-        return getattr(settings, "WAGTAIL_POLYMATH", {})
-
+        user_settings = getattr(settings, "WAGTAIL_POLYMATH", None)
+        return user_settings if isinstance(user_settings, dict) else {}
     @property
     def mathjax_url(self):
         return self._user_settings.get("mathjax_url") or MATHJAX_DEFAULT_URL
