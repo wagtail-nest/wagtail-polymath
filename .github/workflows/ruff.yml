@@ -10,13 +10,14 @@ on:
 
 jobs:
   ruff:
+    name: Ruff
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
     # Keep in sync with .pre-comit-config.yaml
-    - run: python -Im pip install --user ruff==0.4.9
+    - run: python -Im pip install --user ruff==0.16.0
 
     - name: Run ruff
       working-directory: ./src
