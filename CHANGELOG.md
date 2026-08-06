@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-## 1.4.0 (2026-08-05)
+## 1.4.0 (2026-08-06)
 
+- Dropped support for Python < 3.10, Django < 5.2, Wagtail < 7.0
 - Added a `WAGTAIL_POLYMATH` settings dict, with `mathjax_url` and `mathjax_sri` keys, to allow
   loading MathJax from a different CDN, or self-hosted, instead of the pinned cdnjs default.
   See [Configuration](README.md#configuration)
