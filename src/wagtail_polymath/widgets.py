@@ -25,7 +25,9 @@ class MathJaxWidget(forms.Textarea):
         return forms.Media(
             js=(
                 Script(wagtail_polymath_settings.mathjax_url, **attrs),
-                versioned_static("wagtail_polymath/js/wagtail_polymath.js"),
+                versioned_static(
+                    "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js"
+                ),
                 versioned_static(
                     "wagtail_polymath/js/wagtail_polymath-mathjax-controller.js"
                 ),
