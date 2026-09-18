@@ -4,7 +4,7 @@ from wagtail_polymath.settings import (
     wagtail_polymath_settings,
 )
 from wagtail_polymath.templatetags.wagtail_polymath import mathjax_script
-from wagtail_polymath.widgets import MathJaxWidget
+from wagtail_polymath.widgets import PolymathTextareaWidget
 
 
 CUSTOM_URL = "https://example.com/mathjax/tex-mml-chtml.js"
@@ -12,7 +12,7 @@ CUSTOM_SRI = "sha256-Ynv3Q3nAtRTr6UDX+X6vbn9d1t8ZO5oV2Y4gvL9y0ck="
 
 
 def widget_media_html():
-    return str(MathJaxWidget().media)
+    return str(PolymathTextareaWidget().media)
 
 
 class TestDefaultMathJaxSettings:

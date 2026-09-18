@@ -5,10 +5,10 @@ from wagtail.admin.staticfiles import versioned_static
 from .settings import wagtail_polymath_settings
 
 
-__all__ = ["MathJaxWidget"]
+__all__ = ["PolymathTextareaWidget"]
 
 
-class MathJaxWidget(forms.Textarea):
+class PolymathTextareaWidget(forms.Textarea):
     template_name = "wagtail_polymath/polymath-textarea-widget.html"
 
     def build_attrs(self, *args, **kwargs):

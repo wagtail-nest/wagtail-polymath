@@ -73,7 +73,7 @@ function initMathJaxPreview(id) {
     return;
   }
 
-  const preview = new Preview("MathPreview-" + id, "MathBuffer-" + id, id);
+  const preview = new Preview("PolymathTextareaPreview-" + id, "PolymathTextareaBuffer-" + id, id);
 
   window.wagtailMathPreviews = window.wagtailMathPreviews || {};
   window.wagtailMathPreviews[id] = preview;
