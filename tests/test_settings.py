@@ -19,10 +19,10 @@ class TestDefaultMathJaxSettings:
     """No WAGTAIL_POLYMATH setting configured."""
 
     def test_mathjax_url_returns_default(self):
-        assert wagtail_polymath_settings.mathjax_url == MATHJAX_DEFAULT_URL
+        assert wagtail_polymath_settings.library_url == MATHJAX_DEFAULT_URL
 
     def test_mathjax_sri_returns_default(self):
-        assert wagtail_polymath_settings.mathjax_sri == MATHJAX_DEFAULT_SRI
+        assert wagtail_polymath_settings.library_sri == MATHJAX_DEFAULT_SRI
 
     def test_widget_media_uses_default_url_and_integrity(self):
         html = widget_media_html()
@@ -42,11 +42,11 @@ class TestCustomUrlOnly:
 
     def test_mathjax_url_returns_custom_url(self, settings):
         settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
-        assert wagtail_polymath_settings.mathjax_url == CUSTOM_URL
+        assert wagtail_polymath_settings.library_url == CUSTOM_URL
 
     def test_mathjax_sri_is_none(self, settings):
         settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
-        assert wagtail_polymath_settings.mathjax_sri is None
+        assert wagtail_polymath_settings.library_sri is None
 
     def test_widget_media_omits_integrity(self, settings):
         settings.WAGTAIL_POLYMATH = {"mathjax_url": CUSTOM_URL}
@@ -72,7 +72,7 @@ class TestCustomUrlAndSri:
             "mathjax_url": CUSTOM_URL,
             "mathjax_sri": CUSTOM_SRI,
         }
-        assert wagtail_polymath_settings.mathjax_sri == CUSTOM_SRI
+        assert wagtail_polymath_settings.library_sri == CUSTOM_SRI
 
     def test_widget_media_uses_custom_url_and_integrity(self, settings):
         settings.WAGTAIL_POLYMATH = {
@@ -97,5 +97,5 @@ class TestCustomUrlAndSri:
     def test_sri_ignored_without_matching_url(self, settings):
         """The mathjax_sri key alone (no mathjax_url) must not affect the default."""
         settings.WAGTAIL_POLYMATH = {"mathjax_sri": CUSTOM_SRI}
-        assert wagtail_polymath_settings.mathjax_url == MATHJAX_DEFAULT_URL
-        assert wagtail_polymath_settings.mathjax_sri == MATHJAX_DEFAULT_SRI
+        assert wagtail_polymath_settings.library_url == MATHJAX_DEFAULT_URL
+        assert wagtail_polymath_settings.library_sri == MATHJAX_DEFAULT_SRI

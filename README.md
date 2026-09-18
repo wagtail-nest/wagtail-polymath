@@ -24,11 +24,11 @@ live preview:
 ![](https://github.com/wagtail-nest/wagtail-polymath/blob/main/docs/images/mathblock.png)
 
 `MathBlock` uses MathJax for rendering so there is very little to do on
-the front end. Simply include the MathJax JS and render the raw
+the front end. Include the MathJax JS and render the raw
 `MathBlock` content as you would for any other streamfield plain text
 block.
 
-wagtail-polymath even includes a template tag to include the MathJax JS for
+wagtail-polymath includes a template tag to include the MathJax JS for
 you from a CDN. By default, MathJax is configured to accept all
 recognised markup (TeX, MathML, ASCIIMath) and renders them to HTML. To
 change the configuration, you can pass the desired config command to the
@@ -60,6 +60,9 @@ INSTALLED_APPS = (
 Use `MathBlock` in your `StreamField` content:
 
 ```python
+from wagtail import blocks
+from wagtail.fields import StreamField
+from wagtail.models import Page
 from wagtail_polymath.blocks import MathBlock
 
 
@@ -91,29 +94,29 @@ version with a matching [Subresource Integrity](https://developer.mozilla.org/en
 (SRI) hash, so the browser can verify the script hasn't been tampered with.
 
 If you'd rather load MathJax from a different CDN, your own static files, or
-a different version, set `mathjax_url` to the full script URL:
+a different version, set `library_url` to the full script URL:
 
 ```python
 # settings.py
 WAGTAIL_POLYMATH = {
-    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "library_url": "https://example.com/path/to/tex-mml-chtml.js",
 }
 ```
 
 Since we can't know the SRI hash for a script we don't control, setting a
 custom URL on its own disables integrity checking for that script (no
 `integrity`/`crossorigin` attributes are rendered). If you want that
-protection back, also set `mathjax_sri` to the hash for your chosen file:
+protection back, also set `library_sri` to the hash for your chosen file:
 
 ```python
 # settings.py
 WAGTAIL_POLYMATH = {
-    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
-    "mathjax_sri": "sha256-...",
+    "library_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "library_sri": "sha256-...",
 }
 ```
 
-`mathjax_sri` has no effect unless `mathjax_url` is also set — the built-in
+`library_sri` has no effect unless `library_url` is also set — the built-in
 default URL always uses its own pinned hash.
 
 To generate the hash for your chosen file, download it and use `openssl`.
@@ -124,12 +127,12 @@ Note that the `integrity` attribute requires a **base64**-encoded digest —
 openssl dgst -sha256 -binary tex-mml-chtml.js | openssl base64 -A
 ```
 
-Prefix the output with `sha256-` to get the full `mathjax_sri` value:
+Prefix the output with `sha256-` to get the full `library_sri` value:
 
 ```python
 WAGTAIL_POLYMATH = {
-    "mathjax_url": "https://example.com/path/to/tex-mml-chtml.js",
-    "mathjax_sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+    "library_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "library_sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
 }
 ```
 

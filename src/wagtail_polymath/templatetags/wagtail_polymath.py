@@ -12,7 +12,7 @@ register = template.Library()
 @register.simple_tag
 def mathjax_script():
     attributes = {"defer": True}
-    integrity = wagtail_polymath_settings.mathjax_sri
+    integrity = wagtail_polymath_settings.library_sri
     if integrity:
         attributes["crossorigin"] = "anonymous"
         attributes["integrity"] = integrity
@@ -20,6 +20,6 @@ def mathjax_script():
     return format_html(
         '<script src="{init_path}"></script><script src="{path}"{attributes}></script>',
         init_path=versioned_static("wagtail_polymath/js/mathjax_init.js"),
-        path=wagtail_polymath_settings.mathjax_url,
+        path=wagtail_polymath_settings.library_url,
         attributes=flatatt(attributes),
     )

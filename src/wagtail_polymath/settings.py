@@ -2,10 +2,13 @@ from django.conf import settings
 
 
 MATHJAX_VERSION = "4.1.2"
-MATHJAX_DEFAULT_URL = (
-    f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js"
-)
-MATHJAX_DEFAULT_SRI = "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU="
+
+ENGINES = {
+    "mathjax": {
+        "library_url": f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
+        "sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+    }
+}
 
 
 class WagtailPolymathSettings:
@@ -13,25 +16,36 @@ class WagtailPolymathSettings:
     Shadows Django's settings, exposing the WAGTAIL_POLYMATH dict as attributes.
     For example:
         from wagtail_polymath.settings import wagtail_polymath_settings
-        print(wagtail_polymath_settings.mathjax_url)
+        print(wagtail_polymath_settings.library_url)
     """
 
     @property
-    def _user_settings(self):
+    def _user_settings(self) -> dict[str, str]:
         user_settings = getattr(settings, "WAGTAIL_POLYMATH", None)
         return user_settings if isinstance(user_settings, dict) else {}
-    @property
-    def mathjax_url(self):
-        return self._user_settings.get("mathjax_url") or MATHJAX_DEFAULT_URL
 
     @property
-    def mathjax_sri(self):
-        if self._user_settings.get("mathjax_url"):
+    def engine(self) -> str:
+        user_engine = self._user_settings.get("engine")
+        if user_engine and user_engine in ENGINES:
+            return user_engine
+        return "mathjax"
+
+    @property
+    def library_url(self):
+        return (
+            self._user_settings.get("library_url")
+            or ENGINES[self.engine]["library_url"]
+        )
+
+    @property
+    def library_sri(self):
+        if self._user_settings.get("library_url"):
             # We can't know the hash for a script we don't control, so a
-            # custom URL without a matching mathjax_sri setting intentionally
+            # custom URL without a matching library_url setting intentionally
             # omits integrity checking rather than erroring.
-            return self._user_settings.get("mathjax_sri")
-        return MATHJAX_DEFAULT_SRI
+            return self._user_settings.get("library_sri")
+        return ENGINES[self.engine]["library_url"]
 
 
 wagtail_polymath_settings = WagtailPolymathSettings()

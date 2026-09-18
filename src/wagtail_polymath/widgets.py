@@ -20,14 +20,14 @@ class PolymathTextareaWidget(forms.Textarea):
     @property
     def media(self):
         attrs = {"defer": True}
-        integrity = wagtail_polymath_settings.mathjax_sri
+        integrity = wagtail_polymath_settings.library_sri
         if integrity:
             attrs["crossorigin"] = "anonymous"
             attrs["integrity"] = integrity
 
         return forms.Media(
             js=(
-                Script(wagtail_polymath_settings.mathjax_url, **attrs),
+                Script(wagtail_polymath_settings.library_url, **attrs),
                 versioned_static(
                     "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js"
                 ),
