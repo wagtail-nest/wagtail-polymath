@@ -13,7 +13,7 @@ class PolymathTextareaWidget(forms.Textarea):
 
     def build_attrs(self, *args, **kwargs):
         attrs = super().build_attrs(*args, **kwargs)
-        attrs["data-controller"] = "wagtailmathjax"
+        attrs["data-controller"] = "polymath-textarea-controller"
 
         return attrs
 
@@ -31,6 +31,9 @@ class PolymathTextareaWidget(forms.Textarea):
                 versioned_static(script)
                 for script in wagtail_polymath_settings.widget_media_js
             ],
+            versioned_static(
+                "wagtail_polymath/js/wagtail_polymath-preview-controller.js"
+            ),
         ]
 
         return forms.Media(js=js)

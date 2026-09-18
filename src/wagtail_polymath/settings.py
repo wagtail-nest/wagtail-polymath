@@ -18,7 +18,6 @@ ENGINES: dict[str, EngineDict] = {
         "sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
         "js": [
             "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js",
-            "wagtail_polymath/js/wagtail_polymath-mathjax-controller.js",
         ],
     }
 }
