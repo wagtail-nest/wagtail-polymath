@@ -25,14 +25,12 @@ class PolymathTextareaWidget(forms.Textarea):
             attrs["crossorigin"] = "anonymous"
             attrs["integrity"] = integrity
 
-        return forms.Media(
-            js=(
-                Script(wagtail_polymath_settings.library_url, **attrs),
-                versioned_static(
-                    "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js"
-                ),
-                versioned_static(
-                    "wagtail_polymath/js/wagtail_polymath-mathjax-controller.js"
-                ),
-            )
-        )
+        js = [
+            Script(wagtail_polymath_settings.library_url, **attrs),
+            *[
+                versioned_static(script)
+                for script in wagtail_polymath_settings.widget_media_js
+            ],
+        ]
+
+        return forms.Media(js=js)
