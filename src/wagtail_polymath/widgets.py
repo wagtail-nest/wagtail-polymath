@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from typing import TYPE_CHECKING
 
 from django import forms
 from django.forms import Script, Stylesheet
@@ -6,6 +6,9 @@ from wagtail.admin.staticfiles import versioned_static
 
 from .settings import wagtail_polymath_settings
 
+
+if TYPE_CHECKING:
+    from .settings import LibraryDict
 
 __all__ = ["PolymathTextareaWidget"]
 
@@ -19,21 +22,30 @@ class PolymathTextareaWidget(forms.Textarea):
 
         return attrs
 
+    def _media_attrs(
+        self, library: "LibraryDict", defer: bool = True
+    ) -> dict[str, str | bool]:
+        attrs = {}
+        if defer:
+            attrs["defer"] = True
+
+        if sri := library["sri"].strip():
+            attrs["crossorigin"] = "anonymous"
+            attrs["integrity"] = sri
+
+        return attrs
+
     @property
     def media(self):
         scripts = []
         stylesheets = []
-        for library in wagtail_polymath_settings.libraries:
-            attrs = {"defer": True}
-            if sri := library["sri"].strip():
-                attrs["crossorigin"] = "anonymous"
-                attrs["integrity"] = sri
+        for library in wagtail_polymath_settings.libraries_js:
+            scripts.append(Script(library["url"], **self._media_attrs(library)))
 
-            url = library["url"].strip()
-            if urlparse(url).path.endswith(".css"):
-                stylesheets.append(Stylesheet(url, **attrs))
-            else:
-                scripts.append(Script(url, **attrs))
+        for library in wagtail_polymath_settings.libraries_css:
+            stylesheets.append(
+                Stylesheet(library["url"], **self._media_attrs(library, defer=False))
+            )
 
         js = [
             *scripts,

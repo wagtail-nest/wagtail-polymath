@@ -15,7 +15,7 @@ class TestDefaultMathJaxSettings:
     """No WAGTAIL_POLYMATH setting configured."""
 
     def test_libraries_returns_default(self):
-        assert wagtail_polymath_settings.libraries == ENGINES["mathjax"]["libraries"]
+        assert wagtail_polymath_settings.libraries_js == ENGINES["mathjax"]["libraries"]
 
     def test_widget_media_uses_default_url_and_integrity(self):
         html = widget_media_html()
@@ -35,15 +35,15 @@ class TestDefaultMathJaxSettings:
 
 
 class TestCustomUrlOnly:
-    """WAGTAIL_POLYMATH["mathjax_url"] set, no matching SRI hash supplied."""
+    """The library URL is set, no matching SRI hash supplied."""
 
     def test_mathjax_url_returns_custom_url(self, settings):
         settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
-        assert wagtail_polymath_settings.library_url == CUSTOM_URL
+        assert wagtail_polymath_settings.libraries_js[0]["url"] == CUSTOM_URL
 
     def test_mathjax_sri_is_none(self, settings):
         settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
-        assert wagtail_polymath_settings.library_sri is None
+        assert wagtail_polymath_settings.libraries_js[0].get("sri") is None
 
     def test_widget_media_omits_integrity(self, settings):
         settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
@@ -69,7 +69,7 @@ class TestCustomUrlAndSri:
         settings.WAGTAIL_POLYMATH = {
             "libraries": [{"url": CUSTOM_URL, "sri": CUSTOM_SRI}]
         }
-        assert wagtail_polymath_settings.library_sri == CUSTOM_SRI
+        assert wagtail_polymath_settings.libraries_js[0]["sri"] == CUSTOM_SRI
 
     def test_widget_media_uses_custom_url_and_integrity(self, settings):
         settings.WAGTAIL_POLYMATH = {

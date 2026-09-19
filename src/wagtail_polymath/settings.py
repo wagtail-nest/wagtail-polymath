@@ -1,4 +1,5 @@
 from typing import NotRequired, Required, TypedDict
+from urllib.parse import urlparse
 
 from django.conf import settings
 
@@ -57,24 +58,32 @@ class WagtailPolymathSettings:
     Shadows Django's settings, exposing the WAGTAIL_POLYMATH dict as attributes.
     For example:
         from wagtail_polymath.settings import wagtail_polymath_settings
-        print(wagtail_polymath_settings.library_url)
+        print(wagtail_polymath_settings.libraries_js)
     """
+
+    engine: str = "mathjax"
+    libraries_js: list[LibraryDict]
+    libraries_css: list[LibraryDict]
+
+    def __init__(self):
+        user_engine = self._user_settings.get("engine")
+        if user_engine and user_engine in ENGINES:
+            self.engine = user_engine
+
+        self.libraries_js = []
+        self.libraries_css = []
+        libs = self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
+        for library in libs:
+            url = library["url"].strip()
+            if urlparse(url).path.endswith(".css"):
+                self.libraries_css.append(library)
+            else:
+                self.libraries_js.append(library)
 
     @property
     def _user_settings(self) -> dict[str, EngineDict]:
         user_settings = getattr(settings, "WAGTAIL_POLYMATH", None)
         return user_settings if isinstance(user_settings, dict) else {}
-
-    @property
-    def engine(self) -> str:
-        user_engine = self._user_settings.get("engine")
-        if user_engine and user_engine in ENGINES:
-            return user_engine
-        return "mathjax"
-
-    @property
-    def libraries(self) -> list[LibraryDict]:
-        return self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
 
     @property
     def widget_media_js(self) -> list[str]:
