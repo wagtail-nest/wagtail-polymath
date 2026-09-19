@@ -14,6 +14,7 @@ class EngineDict(TypedDict):
 
 
 MATHJAX_VERSION = "4.1.2"
+KATEX_VERSION = "0.18.7"
 
 ENGINES: dict[str, EngineDict] = {
     "mathjax": {
@@ -25,6 +26,26 @@ ENGINES: dict[str, EngineDict] = {
         ],
         "widget_js": [
             "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js",
+            "wagtail_polymath/js/wagtail_polymath-preview-controller.js",
+        ],
+    },
+    "katex": {
+        "libraries": [
+            {
+                "url": f"https://cdn.jsdelivr.net/npm/katex@{KATEX_VERSION}/dist/katex.min.js",
+                "sri": "sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj",
+            },
+            {
+                "url": f"https://cdn.jsdelivr.net/npm/katex@{KATEX_VERSION}/dist/contrib/auto-render.min.js",
+                "sri": "sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz",
+            },
+            {
+                "url": f"https://cdn.jsdelivr.net/npm/katex@{KATEX_VERSION}/dist/katex.min.css",
+                "sri": "sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX",
+            },
+        ],
+        "widget_js": [
+            "wagtail_polymath/js/wagtail_polymath-katex-widget.js",
             "wagtail_polymath/js/wagtail_polymath-preview-controller.js",
         ],
     },
