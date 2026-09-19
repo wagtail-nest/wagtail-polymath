@@ -3,23 +3,31 @@ from typing import NotRequired, Required, TypedDict
 from django.conf import settings
 
 
+class LibraryDict(TypedDict):
+    url: Required[str]
+    sri: NotRequired[str | None]
+
+
 class EngineDict(TypedDict):
-    library_url: Required[str]
-    sri: NotRequired[str]
-    js: NotRequired[list[str]]
-    css: NotRequired[list[str]]
+    libraries: Required[list[LibraryDict]]
+    widget_js: NotRequired[list[str]]
 
 
 MATHJAX_VERSION = "4.1.2"
 
 ENGINES: dict[str, EngineDict] = {
     "mathjax": {
-        "library_url": f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
-        "sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
-        "js": [
-            "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js",
+        "libraries": [
+            {
+                "url": f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
+                "sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+            },
         ],
-    }
+        "widget_js": [
+            "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js",
+            "wagtail_polymath/js/wagtail_polymath-preview-controller.js",
+        ],
+    },
 }
 
 
@@ -32,7 +40,7 @@ class WagtailPolymathSettings:
     """
 
     @property
-    def _user_settings(self) -> dict[str, str]:
+    def _user_settings(self) -> dict[str, EngineDict]:
         user_settings = getattr(settings, "WAGTAIL_POLYMATH", None)
         return user_settings if isinstance(user_settings, dict) else {}
 
@@ -44,24 +52,12 @@ class WagtailPolymathSettings:
         return "mathjax"
 
     @property
-    def library_url(self) -> str:
-        return (
-            self._user_settings.get("library_url")
-            or ENGINES[self.engine]["library_url"]
-        )
-
-    @property
-    def library_sri(self) -> str | None:
-        if self._user_settings.get("library_url"):
-            # We can't know the hash for a script we don't control, so a
-            # custom URL without a matching library_url setting intentionally
-            # omits integrity checking rather than erroring.
-            return self._user_settings.get("library_sri")
-        return ENGINES[self.engine]["library_url"]
+    def libraries(self) -> list[LibraryDict]:
+        return self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
 
     @property
     def widget_media_js(self) -> list[str]:
-        return ENGINES[self.engine].get("js", [])
+        return ENGINES[self.engine].get("widget_js", [])
 
 
 wagtail_polymath_settings = WagtailPolymathSettings()

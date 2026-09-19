@@ -1,5 +1,7 @@
+from urllib.parse import urlparse
+
 from django import forms
-from django.forms import Script
+from django.forms import Script, Stylesheet
 from wagtail.admin.staticfiles import versioned_static
 
 from .settings import wagtail_polymath_settings
@@ -19,21 +21,26 @@ class PolymathTextareaWidget(forms.Textarea):
 
     @property
     def media(self):
-        attrs = {"defer": True}
-        integrity = wagtail_polymath_settings.library_sri
-        if integrity:
-            attrs["crossorigin"] = "anonymous"
-            attrs["integrity"] = integrity
+        scripts = []
+        stylesheets = []
+        for library in wagtail_polymath_settings.libraries:
+            attrs = {"defer": True}
+            if sri := library["sri"].strip():
+                attrs["crossorigin"] = "anonymous"
+                attrs["integrity"] = sri
+
+            url = library["url"].strip()
+            if urlparse(url).path.endswith(".css"):
+                stylesheets.append(Stylesheet(url, **attrs))
+            else:
+                scripts.append(Script(url, **attrs))
 
         js = [
-            Script(wagtail_polymath_settings.library_url, **attrs),
+            *scripts,
             *[
                 versioned_static(script)
                 for script in wagtail_polymath_settings.widget_media_js
             ],
-            versioned_static(
-                "wagtail_polymath/js/wagtail_polymath-preview-controller.js"
-            ),
         ]
 
-        return forms.Media(js=js)
+        return forms.Media(js=js, css={"all": stylesheets} if stylesheets else None)
