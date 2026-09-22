@@ -1,7 +1,8 @@
-from typing import TypedDict, cast
+from typing import Any, TypedDict, cast
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.core.signals import setting_changed
 from typing_extensions import NotRequired
 
 
@@ -75,21 +76,7 @@ class WagtailPolymathSettings:
     libraries_css: list[LibraryDict]
 
     def __init__(self):
-        user_engine = self._user_settings.get("engine")
-        if user_engine and user_engine in ENGINES:
-            self.engine = user_engine
-
-        self.libraries_js = []
-        self.libraries_css = []
-        libs: list[LibraryDict] = (
-            self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
-        )
-        for library in libs:
-            url = library["url"].strip()
-            if urlparse(url).path.endswith(".css"):
-                self.libraries_css.append(library)
-            else:
-                self.libraries_js.append(library)
+        self.setup()
 
     @property
     def _user_settings(self) -> UserSettingsDict:
@@ -108,5 +95,30 @@ class WagtailPolymathSettings:
     def init_js(self) -> str | None:
         return ENGINES[self.engine].get("init_js")
 
+    def setup(self):
+        user_engine = self._user_settings.get("engine")
+        if user_engine and user_engine in ENGINES:
+            self.engine = user_engine
+
+        self.libraries_js = []
+        self.libraries_css = []
+        libs: list[LibraryDict] = (
+            self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
+        )
+        for library in libs:
+            url = library["url"].strip()
+            if urlparse(url).path.endswith(".css"):
+                self.libraries_css.append(library)
+            else:
+                self.libraries_js.append(library)
+
 
 wagtail_polymath_settings = WagtailPolymathSettings()
+
+
+def reload_polymath_settings(*args: Any, **kwargs: Any):
+    if kwargs["setting"] == "WAGTAIL_POLYMATH":
+        wagtail_polymath_settings.setup()
+
+
+setting_changed.connect(reload_polymath_settings)
