@@ -13,30 +13,23 @@
 - [Discussions](https://github.com/wagtail-nest/wagtail-polymath/discussions)
 - [Security](https://github.com/wagtail-nest/wagtail-polymath/security)
 
-wagtail-polymath allows you to write equations in your
-[Wagtail](https://github.com/wagtail/wagtail) content using markup and
-render them beautifully.
+wagtail-polymath allows you to write equations in your[Wagtail](https://github.com/wagtail/wagtail) content using markup
+and render them beautifully.
 
-wagtail-polymath provides a `MathBlock` so you can write equations in markup
-(TeX, MathML, ASCIIMath) and render them with MathJax. It features a
-live preview:
+wagtail-polymath provides a `MathBlock` so you can write equations in markup (TeX, MathML, ASCIIMath) and render them
+with a typesetting engine (MathJax or KaTeX), with MathJax being the default. It features a live preview:
 
 ![](https://github.com/wagtail-nest/wagtail-polymath/blob/main/docs/images/mathblock.png)
 
 `MathBlock` uses MathJax for rendering so there is very little to do on
-the front end. Include the MathJax JS and render the raw
-`MathBlock` content as you would for any other streamfield plain text
-block.
+the front end. Include the chosen typesetting engine JavaScript (and optionally CSS), and render the raw
+`MathBlock` content as you would for any other streamfield plain text block.
 
-wagtail-polymath includes a template tag to include the MathJax JS for
-you from a CDN. By default, MathJax is configured to accept all
-recognised markup (TeX, MathML, ASCIIMath) and renders them to HTML. To
-change the configuration, you can pass the desired config command to the
-templatetag. See the [MathJax documentation](https://docs.mathjax.org/en/v2.7-latest/config-files.html#combined-configurations)
-for possible configurations.
+wagtail-polymath includes a template tag to include the chosen typesetting engine library files for you from a CDN.
+MathJax is configured to accept all recognised markup (TeX, MathML, ASCIIMath) and renders them to HTML.
 
 For help on using the markup languages see the relevant MathJax
-documentation (e.g. https://docs.mathjax.org/en/v2.7-latest/tex.html) and
+documentation (e.g. https://docs.mathjax.org/en/latest/input/tex/index.html) and
 the markup language-specific documentation (e.g. https://en.wikibooks.org/wiki/LaTeX)
 
 ## Quickstart
@@ -74,50 +67,70 @@ class MyPage(Page):
     ])
 ```
 
-Use the `mathjax_script` template tag in your front end template to load the
-MathJax library:
+Use the `polymath_scripts` template tag in your front-end template to load the typesetting library:
 
 ```django+html
 {% load wagtail_polymath %}
 ...
 
-{% mathjax_script %}
+{% polymath_scripts %}
 ```
+
+> [!Note]
+> The KaTeX typesetting engine provides additional CSS that needs to be included using the `{% polymath_stylesheets %}`
+> template tag.
 
 ## Configuration
 
-All `wagtail-polymath` settings are defined in a single `WAGTAIL_POLYMATH`
-dictionary in your settings file.
+All `wagtail-polymath` settings are defined in a single `WAGTAIL_POLYMATH`dictionary in your settings file.
 
-By default, wagtail-polymath loads MathJax from jsdelivr, pinned to a specific
+```python
+# settings.py
+WAGTAIL_POLYMATH = {
+    "engine": "mathjax",  # Optional. Allowed values: "mathjax", "katex". Defaults to "mathjax",
+    "libraries": [
+        {
+            "url": "...",  # Required. A fully qualified URL
+            "sri": "...",  # Optional. The Subresource Integrity hash
+        },
+        ...
+    ]
+}
+```
+
+By default, wagtail-polymath loads the typesetting library from jsDelivr, pinned to a specific
 version with a matching [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
 (SRI) hash, so the browser can verify the script hasn't been tampered with.
 
-If you'd rather load MathJax from a different CDN, your own static files, or
-a different version, set `library_url` to the full script URL:
+If you'd rather load the typesetting library from a different CDN, your own static files, or
+a different version, set the relevant entries`library_url` to the full script URL:
 
 ```python
 # settings.py
 WAGTAIL_POLYMATH = {
-    "library_url": "https://example.com/path/to/tex-mml-chtml.js",
+    "libraries": [
+        {"url": "https://example.com/path/to/tex-mml-chtml.js"},
+    ]
 }
 ```
 
-Since we can't know the SRI hash for a script we don't control, setting a
-custom URL on its own disables integrity checking for that script (no
-`integrity`/`crossorigin` attributes are rendered). If you want that
-protection back, also set `library_sri` to the hash for your chosen file:
+Since we can't know the SRI hash for a script we don't control, setting a custom URL on its own disables integrity
+checking for that script (no `integrity`/`crossorigin` attributes are rendered). If you want that protection back,
+set `sri` to the hash for your chosen file:
 
 ```python
 # settings.py
 WAGTAIL_POLYMATH = {
-    "library_url": "https://example.com/path/to/tex-mml-chtml.js",
-    "library_sri": "sha256-...",
+    "libraries": [
+        {
+            "url": "https://example.com/path/to/tex-mml-chtml.js",
+            "sri": "sha256-...",
+        }
+    ]
 }
 ```
 
-`library_sri` has no effect unless `library_url` is also set — the built-in
-default URL always uses its own pinned hash.
+The `sri` has no effect unless `url` is also set — the built-in default URL always uses its own pinned hash.
 
 To generate the hash for your chosen file, download it and use `openssl`.
 Note that the `integrity` attribute requires a **base64**-encoded digest —
@@ -131,17 +144,21 @@ Prefix the output with `sha256-` to get the full `library_sri` value:
 
 ```python
 WAGTAIL_POLYMATH = {
-    "library_url": "https://example.com/path/to/tex-mml-chtml.js",
-    "library_sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+    "libraries": [
+        {
+            "url": "https://example.com/path/to/tex-mml-chtml.js",
+            "sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+        }
+    ]
 }
 ```
 
-Both settings apply to the MathJax script loaded in the Wagtail admin (for
-the `MathBlock` live preview) and the one loaded by the `mathjax_script`
-template tag. Note that the bundled preview JS assumes MathJax's combined
-`tex-mml-chtml` component and its `input/asciimath` loader — if you switch to
-a different version or build of MathJax, you're responsible for keeping it
-compatible with that configuration.
+Both settings apply to the typesetting script loaded in the Wagtail admin (for the `MathBlock` live preview)
+and the one loaded by the `polymath_scripts` template tag.
+
+Note that if you are using MathJax, the bundled preview JS assumes MathJax's combined `tex-mml-chtml` component and
+its `input/asciimath` loader — if you switch to a different version or build of MathJax, you're responsible for keeping
+it compatible with that configuration.
 
 ## Contributing
 
