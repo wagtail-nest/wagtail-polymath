@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING
 
 from django import forms
-from django.forms import Script, Stylesheet
+from django.forms import Script
 from wagtail.admin.staticfiles import versioned_static
 
+from .compat import Stylesheet
 from .settings import wagtail_polymath_settings
 
 
