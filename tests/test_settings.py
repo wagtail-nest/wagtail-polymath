@@ -1,5 +1,5 @@
 from wagtail_polymath.settings import ENGINES, wagtail_polymath_settings
-from wagtail_polymath.templatetags.wagtail_polymath import mathjax_script
+from wagtail_polymath.templatetags.wagtail_polymath import polymath_scripts
 from wagtail_polymath.widgets import PolymathTextareaWidget
 
 
@@ -26,7 +26,7 @@ class TestDefaultMathJaxSettings:
         assert 'crossorigin="anonymous"' in html
 
     def test_template_tag_uses_default_url_and_integrity(self):
-        html = mathjax_script()
+        html = polymath_scripts()
         default_url = ENGINES["mathjax"]["libraries"][0]["url"]
         default_sri = ENGINES["mathjax"]["libraries"][0]["sri"]
         assert default_url in html
@@ -56,14 +56,14 @@ class TestCustomUrlOnly:
 
     def test_template_tag_omits_integrity(self, settings):
         settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
-        html = mathjax_script()
+        html = polymath_scripts()
         assert CUSTOM_URL in html
         assert "integrity" not in html
         assert "crossorigin" not in html
 
 
 class TestCustomUrlAndSri:
-    """Both mathjax_url and mathjax_sri set in WAGTAIL_POLYMATH."""
+    """Both library url and sri are set in WAGTAIL_POLYMATH."""
 
     def test_mathjax_sri_returns_custom_sri(self, settings):
         settings.WAGTAIL_POLYMATH = {
@@ -84,7 +84,7 @@ class TestCustomUrlAndSri:
         settings.WAGTAIL_POLYMATH = {
             "libraries": [{"url": CUSTOM_URL, "sri": CUSTOM_SRI}]
         }
-        html = mathjax_script()
+        html = polymath_scripts()
         assert CUSTOM_URL in html
         assert f'integrity="{CUSTOM_SRI}"' in html
         assert 'crossorigin="anonymous"' in html

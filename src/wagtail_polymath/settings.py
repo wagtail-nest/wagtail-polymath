@@ -12,6 +12,7 @@ class LibraryDict(TypedDict):
 class EngineDict(TypedDict):
     libraries: Required[list[LibraryDict]]
     widget_js: NotRequired[list[str]]
+    init_js: NotRequired[str]
 
 
 MATHJAX_VERSION = "4.1.2"
@@ -29,6 +30,7 @@ ENGINES: dict[str, EngineDict] = {
             "wagtail_polymath/js/wagtail_polymath-mathjax-widget.js",
             "wagtail_polymath/js/wagtail_polymath-preview-controller.js",
         ],
+        "init_js": "wagtail_polymath/js/mathjax_init.js",
     },
     "katex": {
         "libraries": [
@@ -49,6 +51,7 @@ ENGINES: dict[str, EngineDict] = {
             "wagtail_polymath/js/wagtail_polymath-katex-widget.js",
             "wagtail_polymath/js/wagtail_polymath-preview-controller.js",
         ],
+        "init_js": "wagtail_polymath/js/katex_init.js",
     },
 }
 
@@ -88,6 +91,10 @@ class WagtailPolymathSettings:
     @property
     def widget_media_js(self) -> list[str]:
         return ENGINES[self.engine].get("widget_js", [])
+
+    @property
+    def init_js(self) -> str | None:
+        return ENGINES[self.engine].get("init_js")
 
 
 wagtail_polymath_settings = WagtailPolymathSettings()
