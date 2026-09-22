@@ -30,7 +30,7 @@ class PolymathTextareaWidget(forms.Textarea):
         if defer:
             attrs["defer"] = True
 
-        if sri := library["sri"].strip():
+        if sri := library.get("sri", "").strip():
             attrs["crossorigin"] = "anonymous"
             attrs["integrity"] = sri
 

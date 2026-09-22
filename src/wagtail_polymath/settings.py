@@ -1,18 +1,24 @@
-from typing import NotRequired, Required, TypedDict
+from typing import TypedDict, cast
 from urllib.parse import urlparse
 
 from django.conf import settings
+from typing_extensions import NotRequired
 
 
 class LibraryDict(TypedDict):
-    url: Required[str]
-    sri: NotRequired[str | None]
+    url: str
+    sri: NotRequired[str]
 
 
 class EngineDict(TypedDict):
-    libraries: Required[list[LibraryDict]]
+    libraries: list[LibraryDict]
     widget_js: NotRequired[list[str]]
     init_js: NotRequired[str]
+
+
+class UserSettingsDict(TypedDict, total=False):
+    libraries: list[LibraryDict]
+    engine: NotRequired[str]
 
 
 MATHJAX_VERSION = "4.1.2"
@@ -75,7 +81,9 @@ class WagtailPolymathSettings:
 
         self.libraries_js = []
         self.libraries_css = []
-        libs = self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
+        libs: list[LibraryDict] = (
+            self._user_settings.get("libraries") or ENGINES[self.engine]["libraries"]
+        )
         for library in libs:
             url = library["url"].strip()
             if urlparse(url).path.endswith(".css"):
@@ -84,9 +92,13 @@ class WagtailPolymathSettings:
                 self.libraries_js.append(library)
 
     @property
-    def _user_settings(self) -> dict[str, EngineDict]:
+    def _user_settings(self) -> UserSettingsDict:
         user_settings = getattr(settings, "WAGTAIL_POLYMATH", None)
-        return user_settings if isinstance(user_settings, dict) else {}
+        return (
+            cast(UserSettingsDict, user_settings)
+            if isinstance(user_settings, dict)
+            else UserSettingsDict()
+        )
 
     @property
     def widget_media_js(self) -> list[str]:
