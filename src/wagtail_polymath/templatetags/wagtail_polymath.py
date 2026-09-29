@@ -56,7 +56,7 @@ def polymath_scripts() -> "Any | SafeString":
 @register.simple_tag
 def polymath_stylesheets() -> "Any | SafeString":
     stylesheets = []
-    for library in wagtail_polymath_settings.libraries_js:
+    for library in wagtail_polymath_settings.libraries_css:
         attributes = _build_attributes(library)
         stylesheets.append(
             format_html(
