@@ -2,8 +2,8 @@
 branch = True
 concurrency = multiprocessing, thread
 parallel = True
-source = src/
-omit = **/migrations/*,tests/*
+source_pkgs = wagtail_polymath
+omit = **/migrations/*,tests/*, **/__version__.py
 
 [paths]
 source = src,.tox/py*/**/site-packages

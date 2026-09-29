@@ -36,13 +36,12 @@ dependencies = [
     "Wagtail>=7.0"
 ]
 [project.optional-dependencies]
-linting = ["pre-commit>=4.6.0,<5",]
+linting = ["prek>=0.5.3,<0.6",]
 testing = [
     "dj-database-url==3.1.2",
-    "pytest==9.0.3",
-    "pytest-cov==7.1.0",
-    "pytest-django==4.12.0",
+    "coverage>=7.16.1,<8"
 ]
+coverage = ["coverage>=7.16.1,<8"]
 ci = [
     "tox>=4.55.1,<5",
     "tox-gh-actions>=3.5,<4",
@@ -68,7 +67,3 @@ exclude = [
     "ruff.toml",
     "Makefile",
 ]
-
-[tool.pytest.ini_options]
-pythonpath = ". tests"
-DJANGO_SETTINGS_MODULE = "testproject.settings"

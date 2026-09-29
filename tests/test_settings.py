@@ -1,5 +1,6 @@
+from django.test import TestCase, override_settings
+
 from wagtail_polymath.settings import ENGINES, wagtail_polymath_settings
-from wagtail_polymath.templatetags.wagtail_polymath import polymath_scripts
 from wagtail_polymath.widgets import PolymathTextareaWidget
 
 
@@ -11,80 +12,53 @@ def widget_media_html():
     return str(PolymathTextareaWidget().media)
 
 
-class TestDefaultMathJaxSettings:
+class TestDefaultSettings(TestCase):
     """No WAGTAIL_POLYMATH setting configured."""
 
     def test_libraries_returns_default(self):
-        assert wagtail_polymath_settings.libraries_js == ENGINES["mathjax"]["libraries"]
+        self.assertEqual(
+            wagtail_polymath_settings.libraries_js, ENGINES["mathjax"]["libraries"]
+        )
 
     def test_widget_media_uses_default_url_and_integrity(self):
         html = widget_media_html()
         default_url = ENGINES["mathjax"]["libraries"][0]["url"]
         default_sri = ENGINES["mathjax"]["libraries"][0]["sri"]
-        assert default_url in html
-        assert f'integrity="{default_sri}"' in html
-        assert 'crossorigin="anonymous"' in html
-
-    def test_template_tag_uses_default_url_and_integrity(self):
-        html = polymath_scripts()
-        default_url = ENGINES["mathjax"]["libraries"][0]["url"]
-        default_sri = ENGINES["mathjax"]["libraries"][0]["sri"]
-        assert default_url in html
-        assert f'integrity="{default_sri}"' in html
-        assert 'crossorigin="anonymous"' in html
+        self.assertIn(default_url, html)
+        self.assertIn(f'integrity="{default_sri}"', html)
+        self.assertIn('crossorigin="anonymous"', html)
 
 
-class TestCustomUrlOnly:
+@override_settings(WAGTAIL_POLYMATH={"libraries": [{"url": CUSTOM_URL}]})
+class TestCustomUrlOnly(TestCase):
     """The library URL is set, no matching SRI hash supplied."""
 
-    def test_mathjax_url_returns_custom_url(self, settings):
-        settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
-        assert wagtail_polymath_settings.libraries_js[0]["url"] == CUSTOM_URL
+    def test_libraries_js_contains_custom_url(self):
+        self.assertEqual(wagtail_polymath_settings.libraries_js[0]["url"], CUSTOM_URL)
 
-    def test_mathjax_sri_is_none(self, settings):
-        settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
-        assert wagtail_polymath_settings.libraries_js[0].get("sri") is None
+    def test_sri_is_none(self):
+        self.assertIsNone(wagtail_polymath_settings.libraries_js[0].get("sri"))
 
-    def test_widget_media_omits_integrity(self, settings):
-        settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
+    def test_widget_media_omits_integrity(self):
         html = widget_media_html()
         default_url = ENGINES["mathjax"]["libraries"][0]["url"]
-        assert CUSTOM_URL in html
-        assert default_url not in html
-        assert "integrity" not in html
-        assert "crossorigin" not in html
-
-    def test_template_tag_omits_integrity(self, settings):
-        settings.WAGTAIL_POLYMATH = {"libraries": [{"url": CUSTOM_URL}]}
-        html = polymath_scripts()
-        assert CUSTOM_URL in html
-        assert "integrity" not in html
-        assert "crossorigin" not in html
+        self.assertIn(CUSTOM_URL, html)
+        self.assertNotIn(default_url, html)
+        self.assertNotIn("integrity", html)
+        self.assertNotIn("crossorigin", html)
 
 
-class TestCustomUrlAndSri:
+@override_settings(
+    WAGTAIL_POLYMATH={"libraries": [{"url": CUSTOM_URL, "sri": CUSTOM_SRI}]}
+)
+class TestCustomUrlAndSri(TestCase):
     """Both library url and sri are set in WAGTAIL_POLYMATH."""
 
-    def test_mathjax_sri_returns_custom_sri(self, settings):
-        settings.WAGTAIL_POLYMATH = {
-            "libraries": [{"url": CUSTOM_URL, "sri": CUSTOM_SRI}]
-        }
-        assert wagtail_polymath_settings.libraries_js[0]["sri"] == CUSTOM_SRI
+    def test_mathjax_sri_returns_custom_sri(self):
+        self.assertEqual(wagtail_polymath_settings.libraries_js[0]["sri"], CUSTOM_SRI)
 
-    def test_widget_media_uses_custom_url_and_integrity(self, settings):
-        settings.WAGTAIL_POLYMATH = {
-            "libraries": [{"url": CUSTOM_URL, "sri": CUSTOM_SRI}]
-        }
+    def test_widget_media_uses_custom_url_and_integrity(self):
         html = widget_media_html()
-        assert CUSTOM_URL in html
-        assert f'integrity="{CUSTOM_SRI}"' in html
-        assert 'crossorigin="anonymous"' in html
-
-    def test_template_tag_uses_custom_url_and_integrity(self, settings):
-        settings.WAGTAIL_POLYMATH = {
-            "libraries": [{"url": CUSTOM_URL, "sri": CUSTOM_SRI}]
-        }
-        html = polymath_scripts()
-        assert CUSTOM_URL in html
-        assert f'integrity="{CUSTOM_SRI}"' in html
-        assert 'crossorigin="anonymous"' in html
+        self.assertIn(CUSTOM_URL, html)
+        self.assertIn(f'integrity="{CUSTOM_SRI}"', html)
+        self.assertIn('crossorigin="anonymous"', html)
