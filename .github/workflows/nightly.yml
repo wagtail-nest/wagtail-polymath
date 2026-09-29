@@ -19,7 +19,7 @@ jobs:
     # Cannot check the existence of secrets, so limiting to repository name to prevent all forks to run nightly.
     # See: https://github.com/actions/runner/issues/520
     if: ${{ github.repository == 'wagtail-nest/wagtail-polymath' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     permissions:
       contents: read # to fetch code (actions/checkout)
 
