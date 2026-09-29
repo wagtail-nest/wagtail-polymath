@@ -2,6 +2,7 @@ from django.test import TestCase, override_settings
 
 from wagtail_polymath.settings import ENGINES
 from wagtail_polymath.templatetags.wagtail_polymath import (
+    _build_attributes,
     polymath_scripts,
     polymath_stylesheets,
 )
@@ -50,3 +51,18 @@ class TestStylesheetsTemplateTag(TestCase):
                 polymath_stylesheets(),
                 f'<link rel="stylesheet" src="{css["url"]}" crossorigin="anonymous" integrity="{css["sri"]}" defer/>',
             )
+
+
+class TestTemplateTagHelpers(TestCase):
+    def test_build_attributes__default(self):
+        self.assertEqual(_build_attributes({"url": "foo"}), {"defer": True})
+
+    def test_build_attributes__defer(self):
+        self.assertEqual(_build_attributes({"url": "foo"}, defer=False), {})
+
+    def test_build_attributes__with_sri(self):
+        lib = ENGINES["mathjax"]["libraries"][0]
+        self.assertEqual(
+            _build_attributes(lib, defer=True),
+            {"crossorigin": "anonymous", "integrity": lib["sri"], "defer": True},
+        )
