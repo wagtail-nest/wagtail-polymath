@@ -67,16 +67,16 @@ class Preview {
 }
 
 
-function initMathJaxPreview(id) {
+function initPolymathTextareaPreview(id) {
   const target = document.getElementById(id);
   if (!target) {
     return;
   }
 
-  const preview = new Preview("MathPreview-" + id, "MathBuffer-" + id, id);
+  const preview = new Preview("PolymathTextareaPreview-" + id, "PolymathTextareaBuffer-" + id, id);
 
-  window.wagtailMathPreviews = window.wagtailMathPreviews || {};
-  window.wagtailMathPreviews[id] = preview;
+  window.wagtailPolymathPreviews = window.wagtailPolymathPreviews || {};
+  window.wagtailPolymathPreviews[id] = preview;
 
   if (target.value) {
     preview.update();

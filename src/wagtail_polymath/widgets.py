@@ -1,33 +1,59 @@
+from typing import TYPE_CHECKING
+
 from django import forms
 from django.forms import Script
 from wagtail.admin.staticfiles import versioned_static
 
+from .compat import Stylesheet
 from .settings import wagtail_polymath_settings
 
 
-class MathJaxWidget(forms.Textarea):
-    template_name = "wagtail_polymath/mathjaxwidget.html"
+if TYPE_CHECKING:
+    from .settings import LibraryDict
+
+__all__ = ["PolymathTextareaWidget"]
+
+
+class PolymathTextareaWidget(forms.Textarea):
+    template_name = "wagtail_polymath/polymath-textarea-widget.html"
 
     def build_attrs(self, *args, **kwargs):
         attrs = super().build_attrs(*args, **kwargs)
-        attrs["data-controller"] = "wagtailmathjax"
+        attrs["data-controller"] = "polymath-textarea-controller"
+
+        return attrs
+
+    def _media_attrs(
+        self, library: "LibraryDict", defer: bool = True
+    ) -> dict[str, str | bool]:
+        attrs = {}
+        if defer:
+            attrs["defer"] = True
+
+        if sri := library.get("sri", "").strip():
+            attrs["crossorigin"] = "anonymous"
+            attrs["integrity"] = sri
 
         return attrs
 
     @property
     def media(self):
-        attrs = {"defer": True}
-        integrity = wagtail_polymath_settings.mathjax_sri
-        if integrity:
-            attrs["crossorigin"] = "anonymous"
-            attrs["integrity"] = integrity
+        scripts = []
+        stylesheets = []
+        for library in wagtail_polymath_settings.libraries_js:
+            scripts.append(Script(library["url"], **self._media_attrs(library)))
 
-        return forms.Media(
-            js=(
-                Script(wagtail_polymath_settings.mathjax_url, **attrs),
-                versioned_static("wagtail_polymath/js/wagtail_polymath.js"),
-                versioned_static(
-                    "wagtail_polymath/js/wagtail_polymath-mathjax-controller.js"
-                ),
+        for library in wagtail_polymath_settings.libraries_css:
+            stylesheets.append(
+                Stylesheet(library["url"], **self._media_attrs(library, defer=False))
             )
-        )
+
+        js = [
+            *scripts,
+            *[
+                versioned_static(script)
+                for script in wagtail_polymath_settings.widget_media_js
+            ],
+        ]
+
+        return forms.Media(js=js, css={"all": stylesheets} if stylesheets else None)
