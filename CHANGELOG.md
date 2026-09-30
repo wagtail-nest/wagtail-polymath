@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2.0.2 (2026-09-30)
+
+- Fixed a widget initialisation issue
+
 ## 2.0.1 (2026-09-30)
 
 - Dropped support for Python < 3.11 and Django < 5.2
