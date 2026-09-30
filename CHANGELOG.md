@@ -2,8 +2,10 @@
 
 ## Unreleased
 
-- Dropped support for Django < 5.2
-- Upgraded to MathJax 4.1.2, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
+## 2.0.0 (2026-09-30)
+
+- Dropped support for Python < 3.11 and Django < 5.2
+- Upgraded to MathJax 4.1.3, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
   for the CDN script. The template tag has also changed to `polymath_scripts`. See the upgrade considerations
 - Added support for the [KaTeX](https://katex.org/) typesetting library
 - Added a `WAGTAIL_POLYMATH` settings dict, with `libraries` list of `url` (required) and `sri` (optional) keys,
@@ -45,7 +47,7 @@ The `mathjax` template tag has changed to `polymath_scripts` and should no longe
 additionally, there is a new templated tag to use for stylesheets, if you're using KaTeX. `{% polymath_stylesheets %}`
 
 #### `MATHJAX_VERSION`/`MATHJAX_SRI` moved out of `widgets.py`
-These were never documented as public API. `MATHJAX_VERSION` now lives in `wagtail_polymath.settings`.
+These were never documented as public API. `MATHJAX_VERSION` now lives in `wagtail_polymath.config`.
 
 #### Configuration via the `WAGTAIL_POLYMATH` setting dictionary
 Configuration is now done via the `WAGTAIL_POLYMATH` setting dictionary.
@@ -59,8 +61,8 @@ WAGTAIL_POLYMATH = {
             "url": "...",  # Required. A fully qualified URL
             "sri": "...",  # Optional. The Subresource Integrity hash
         },
-        ...
-    ]
+        ...,
+    ],
 }
 ```
 

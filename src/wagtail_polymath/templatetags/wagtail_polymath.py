@@ -5,13 +5,13 @@ from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
 from wagtail.admin.staticfiles import versioned_static
 
-from wagtail_polymath.settings import wagtail_polymath_settings
+from wagtail_polymath.config import wagtail_polymath_config
 
 
 if TYPE_CHECKING:
     from django.utils.safestring import SafeString
 
-    from wagtail_polymath.settings import LibraryDict
+    from wagtail_polymath.config import LibraryDict
 
 register = template.Library()
 
@@ -33,14 +33,14 @@ def _build_attributes(
 @register.simple_tag
 def polymath_scripts() -> "Any | SafeString":
     scripts = []
-    if wagtail_polymath_settings.init_js:
+    if wagtail_polymath_config.init_js:
         scripts.append(
             format_html(
                 '<script src="{init_path}"></script>',
-                init_path=versioned_static(wagtail_polymath_settings.init_js),
+                init_path=versioned_static(wagtail_polymath_config.init_js),
             )
         )
-    for library in wagtail_polymath_settings.libraries_js:
+    for library in wagtail_polymath_config.libraries_js:
         attributes = _build_attributes(library)
         scripts.append(
             format_html(
@@ -56,7 +56,7 @@ def polymath_scripts() -> "Any | SafeString":
 @register.simple_tag
 def polymath_stylesheets() -> "Any | SafeString":
     stylesheets = []
-    for library in wagtail_polymath_settings.libraries_css:
+    for library in wagtail_polymath_config.libraries_css:
         attributes = _build_attributes(library)
         stylesheets.append(
             format_html(

@@ -60,11 +60,13 @@ from wagtail_polymath.blocks import MathBlock
 
 
 class MyPage(Page):
-    body = StreamField([
-        ('heading', blocks.CharBlock(classname="full title")),
-        ('paragraph', blocks.RichTextBlock()),
-        ('equation', MathBlock())
-    ])
+    body = StreamField(
+        [
+            ("heading", blocks.CharBlock(classname="full title")),
+            ("paragraph", blocks.RichTextBlock()),
+            ("equation", MathBlock()),
+        ]
+    )
 ```
 
 Use the `polymath_scripts` template tag in your front-end template to load the typesetting library:
@@ -93,8 +95,8 @@ WAGTAIL_POLYMATH = {
             "url": "...",  # Required. A fully qualified URL
             "sri": "...",  # Optional. The Subresource Integrity hash
         },
-        ...
-    ]
+        ...,
+    ],
 }
 ```
 
@@ -166,6 +168,6 @@ All contributions are welcome! See [CONTRIBUTING.md](https://github.com/wagtail-
 
 Supported versions:
 
-- Python 3.10-3.14
-- Django 5.2, 6.0
-- Wagtail 7.0 (LTS), 7.3, 7.4 (LTS)
+- Python 3.10-3.15
+- Django 5.2, 6.0, 6.1
+- Wagtail 7.0 (LTS), 7.4 (LTS), 8.0
