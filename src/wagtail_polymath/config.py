@@ -94,7 +94,7 @@ class Settings:
     def init_js(self) -> str | None:
         return ENGINES[self.engine].get("init_js")
 
-    def setup(self):
+    def setup(self) -> None:
         user_engine = self._user_settings.get("engine", "mathjax")
         if user_engine and user_engine in ENGINES:
             self.engine = user_engine

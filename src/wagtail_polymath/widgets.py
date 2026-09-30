@@ -1,7 +1,6 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from django import forms
-from django.forms import Script
+from django.forms import Media, Script, Textarea
 from wagtail.admin.staticfiles import versioned_static
 
 from .compat import Stylesheet
@@ -14,11 +13,13 @@ if TYPE_CHECKING:
 __all__ = ["PolymathTextareaWidget"]
 
 
-class PolymathTextareaWidget(forms.Textarea):
+class PolymathTextareaWidget(Textarea):
     template_name = "wagtail_polymath/polymath-textarea-widget.html"
 
-    def build_attrs(self, *args, **kwargs):
-        attrs = super().build_attrs(*args, **kwargs)
+    def build_attrs(
+        self, base_attrs: dict[str, Any], extra_attrs: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        attrs = super().build_attrs(base_attrs, **(extra_attrs or {}))
         attrs["data-controller"] = "polymath-textarea-controller"
 
         return attrs
@@ -37,7 +38,7 @@ class PolymathTextareaWidget(forms.Textarea):
         return attrs
 
     @property
-    def media(self):
+    def media(self) -> Media:
         scripts = []
         stylesheets = []
         for library in wagtail_polymath_config.libraries_js:
@@ -60,4 +61,4 @@ class PolymathTextareaWidget(forms.Textarea):
             ],
         ]
 
-        return forms.Media(js=js, css={"all": stylesheets} if stylesheets else None)
+        return Media(js=js, css={"all": stylesheets} if stylesheets else None)

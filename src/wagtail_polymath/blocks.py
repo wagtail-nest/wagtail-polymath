@@ -7,7 +7,7 @@ from .widgets import PolymathTextareaWidget
 
 class MathBlock(TextBlock):
     @cached_property
-    def field(self):
+    def field(self) -> forms.CharField:
         field_kwargs = {"widget": PolymathTextareaWidget(attrs={"rows": self.rows})}
         field_kwargs.update(self.field_options)
         return forms.CharField(**field_kwargs)
