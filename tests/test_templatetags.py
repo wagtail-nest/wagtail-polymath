@@ -1,6 +1,6 @@
 from django.test import TestCase, override_settings
 
-from wagtail_polymath.settings import ENGINES
+from wagtail_polymath.config import ENGINES
 from wagtail_polymath.templatetags.wagtail_polymath import (
     _build_attributes,
     polymath_scripts,

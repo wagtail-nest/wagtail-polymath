@@ -45,7 +45,7 @@ The `mathjax` template tag has changed to `polymath_scripts` and should no longe
 additionally, there is a new templated tag to use for stylesheets, if you're using KaTeX. `{% polymath_stylesheets %}`
 
 #### `MATHJAX_VERSION`/`MATHJAX_SRI` moved out of `widgets.py`
-These were never documented as public API. `MATHJAX_VERSION` now lives in `wagtail_polymath.settings`.
+These were never documented as public API. `MATHJAX_VERSION` now lives in `wagtail_polymath.config`.
 
 #### Configuration via the `WAGTAIL_POLYMATH` setting dictionary
 Configuration is now done via the `WAGTAIL_POLYMATH` setting dictionary.
@@ -59,8 +59,8 @@ WAGTAIL_POLYMATH = {
             "url": "...",  # Required. A fully qualified URL
             "sri": "...",  # Optional. The Subresource Integrity hash
         },
-        ...
-    ]
+        ...,
+    ],
 }
 ```
 

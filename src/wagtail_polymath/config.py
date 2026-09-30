@@ -62,12 +62,12 @@ ENGINES: dict[str, EngineDict] = {
 }
 
 
-class WagtailPolymathSettings:
+class Settings:
     """
     Shadows Django's settings, exposing the WAGTAIL_POLYMATH dict as attributes.
     For example:
-        from wagtail_polymath.settings import wagtail_polymath_settings
-        print(wagtail_polymath_settings.libraries_js)
+        from wagtail_polymath.settings import wagtail_polymath_config
+        print(wagtail_polymath_config.libraries_js)
     """
 
     engine: str = "mathjax"
@@ -112,12 +112,12 @@ class WagtailPolymathSettings:
                 self.libraries_js.append(library)
 
 
-wagtail_polymath_settings = WagtailPolymathSettings()
+wagtail_polymath_config = Settings()
 
 
 def reload_polymath_settings(*args: Any, **kwargs: Any):
     if kwargs["setting"] == "WAGTAIL_POLYMATH":
-        wagtail_polymath_settings.setup()
+        wagtail_polymath_config.setup()
 
 
 setting_changed.connect(reload_polymath_settings)

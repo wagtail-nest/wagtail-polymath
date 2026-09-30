@@ -5,11 +5,11 @@ from django.forms import Script
 from wagtail.admin.staticfiles import versioned_static
 
 from .compat import Stylesheet
-from .settings import wagtail_polymath_settings
+from .config import wagtail_polymath_config
 
 
 if TYPE_CHECKING:
-    from .settings import LibraryDict
+    from .config import LibraryDict
 
 __all__ = ["PolymathTextareaWidget"]
 
@@ -40,10 +40,10 @@ class PolymathTextareaWidget(forms.Textarea):
     def media(self):
         scripts = []
         stylesheets = []
-        for library in wagtail_polymath_settings.libraries_js:
+        for library in wagtail_polymath_config.libraries_js:
             scripts.append(Script(library["url"], **self._media_attrs(library)))
 
-        for library in wagtail_polymath_settings.libraries_css:
+        for library in wagtail_polymath_config.libraries_css:
             stylesheets.append(
                 Stylesheet(
                     library["url"],
@@ -56,7 +56,7 @@ class PolymathTextareaWidget(forms.Textarea):
             *scripts,
             *[
                 versioned_static(script)
-                for script in wagtail_polymath_settings.widget_media_js
+                for script in wagtail_polymath_config.widget_media_js
             ],
         ]
 
