@@ -2,8 +2,10 @@
 
 ## Unreleased
 
-- Dropped support for Django < 5.2
-- Upgraded to MathJax 4.1.2, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
+## 2.0.0 (2026-09-30)
+
+- Dropped support for Python < 3.11 and Django < 5.2
+- Upgraded to MathJax 4.1.3, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
   for the CDN script. The template tag has also changed to `polymath_scripts`. See the upgrade considerations
 - Added support for the [KaTeX](https://katex.org/) typesetting library
 - Added a `WAGTAIL_POLYMATH` settings dict, with `libraries` list of `url` (required) and `sri` (optional) keys,

@@ -21,7 +21,7 @@ class UserSettingsDict(TypedDict, total=False):
     engine: NotRequired[str]
 
 
-MATHJAX_VERSION = "4.1.2"
+MATHJAX_VERSION = "4.1.3"
 KATEX_VERSION = "0.18.7"
 
 ENGINES: dict[str, EngineDict] = {
@@ -29,7 +29,7 @@ ENGINES: dict[str, EngineDict] = {
         "libraries": [
             {
                 "url": f"https://cdn.jsdelivr.net/npm/mathjax@{MATHJAX_VERSION}/tex-mml-chtml.js",
-                "sri": "sha256-dPV35kaoLq1rg+JbYf8p1kTrZamwMY+XIwaWUPwqtpU=",
+                "sri": "sha256-ihPtDDm7pTmSF9ViEsItlvsrBTsNkz0MOXMchzOwCQw=",
             },
         ],
         "widget_js": [
