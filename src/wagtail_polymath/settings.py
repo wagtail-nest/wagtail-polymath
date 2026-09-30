@@ -1,9 +1,8 @@
-from typing import Any, TypedDict, cast
+from typing import Any, NotRequired, TypedDict, cast
 from urllib.parse import urlparse
 
 from django.conf import settings
 from django.core.signals import setting_changed
-from typing_extensions import NotRequired
 
 
 class LibraryDict(TypedDict):
@@ -96,7 +95,7 @@ class WagtailPolymathSettings:
         return ENGINES[self.engine].get("init_js")
 
     def setup(self):
-        user_engine = self._user_settings.get("engine")
+        user_engine = self._user_settings.get("engine", "mathjax")
         if user_engine and user_engine in ENGINES:
             self.engine = user_engine
 

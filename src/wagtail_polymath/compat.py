@@ -11,5 +11,5 @@ else:
     class Stylesheet(MediaAsset):
         element_template = '<link href="{path}"{attributes}>'
 
-        def __init__(self, href, media: str | None = "all", **attributes):
-            super().__init__(path=href, rel="stylesheet", media=media, **attributes)
+        def __init__(self, href, **attributes):
+            super().__init__(path=href, rel="stylesheet", **attributes)

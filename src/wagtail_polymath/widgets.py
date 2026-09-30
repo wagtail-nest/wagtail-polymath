@@ -45,7 +45,11 @@ class PolymathTextareaWidget(forms.Textarea):
 
         for library in wagtail_polymath_settings.libraries_css:
             stylesheets.append(
-                Stylesheet(library["url"], **self._media_attrs(library, defer=False))
+                Stylesheet(
+                    library["url"],
+                    media="all",
+                    **self._media_attrs(library, defer=False),
+                )
             )
 
         js = [
