@@ -19,7 +19,7 @@ class PolymathTextareaWidget(Textarea):
     def build_attrs(
         self, base_attrs: dict[str, Any], extra_attrs: dict[str, Any] | None = None
     ) -> dict[str, Any]:
-        attrs = super().build_attrs(base_attrs, **(extra_attrs or {}))
+        attrs = super().build_attrs(base_attrs, extra_attrs)
         attrs["data-controller"] = "polymath-textarea-controller"
 
         return attrs

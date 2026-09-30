@@ -13,8 +13,20 @@ class TestPolymathTextareaWidget(TestCase):
         self.widget = PolymathTextareaWidget()
 
     def test_widget_build_attr(self):
-        attrs = self.widget.build_attrs({})
-        self.assertEqual(attrs["data-controller"], "polymath-textarea-controller")
+        self.assertEqual(
+            self.widget.build_attrs({}),
+            {"data-controller": "polymath-textarea-controller"},
+        )
+
+        self.assertEqual(
+            self.widget.build_attrs({"cols": "40", "rows": 1}, {"id": "__ID__"}),
+            {
+                "cols": "40",
+                "rows": 1,
+                "id": "__ID__",
+                "data-controller": "polymath-textarea-controller",
+            },
+        )
 
     def test_widget_media(self):
         default_url = ENGINES["mathjax"]["libraries"][0]["url"]
