@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2.0.0 (2026-09-30)
+## 2.0.1 (2026-09-30)
 
 - Dropped support for Python < 3.11 and Django < 5.2
 - Upgraded to MathJax 4.1.3, using [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
@@ -65,6 +65,10 @@ WAGTAIL_POLYMATH = {
     ],
 }
 ```
+
+## 2.0.0 (2026-09-30)
+
+See notes from 2.0.1
 
 ## 2.0.0.dev1 (2026-06-18)
 
