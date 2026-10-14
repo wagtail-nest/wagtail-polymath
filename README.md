@@ -168,6 +168,6 @@ All contributions are welcome! See [CONTRIBUTING.md](https://github.com/wagtail-
 
 Supported versions:
 
-- Python 3.10-3.15
+- Python 3.11-3.15
 - Django 5.2, 6.0, 6.1
-- Wagtail 7.0 (LTS), 7.4 (LTS), 8.0
+- Wagtail 7.4 (LTS), 8.0
