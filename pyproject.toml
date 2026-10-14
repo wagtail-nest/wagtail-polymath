@@ -34,7 +34,7 @@ requires-python = ">=3.11"
 dynamic = ["version"]
 dependencies = [
     "Django>=5.2",
-    "Wagtail>=7.0"
+    "Wagtail>=7.4"
 ]
 [project.optional-dependencies]
 linting = ["prek>=0.5.3,<0.6",]
