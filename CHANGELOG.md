@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dropped support for Wagtail < 7.4
+
 ## 2.0.2 (2026-09-30)
 
 - Fixed a widget initialisation issue
