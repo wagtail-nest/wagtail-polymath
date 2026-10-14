@@ -1,18 +1,44 @@
+let resolveMathJaxReady;
+const mathJaxReady = new Promise((resolve) => {
+  resolveMathJaxReady = resolve;
+});
+
+if (window.MathJax && window.MathJax.version) {
+  // MathJax was loaded before this script: don't clobber it, just wait for startup.
+  window.MathJax.startup.promise.then(resolveMathJaxReady);
+} else {
+  window.MathJax = {
+    loader: { load: ["input/asciimath"] },  // "AM" isn't in tex-mml-chtml; add it explicitly
+    tex: {
+      inlineMath: { "[+]": [["$", "$"]] },
+    },
+    startup: {
+      ready() {
+        // @see https://docs.mathjax.org/en/latest/web/actions.html
+        MathJax.startup.defaultReady();
+        MathJax.startup.promise.then(resolveMathJaxReady);
+      },
+    },
+  };
+}
+
+
 class Preview {
   constructor(previewId, bufferId, inputId) {
     this.preview = document.getElementById(previewId);
     this.buffer = document.getElementById(bufferId);
     this.input = document.getElementById(inputId);
     this.delay = 150;        // delay after keystroke before updating
-    this.timeout = null;     // store setTimeout id
-    this.mjRunning = false;  // true when MathJax is processing
-    this.mjPending = false;  // true when a typeset has been queued
-    this.oldText = null;     // used to check if an update is needed
+    this.timeout = null;     // the setTimeout id
+    this.mjRunning = false;  // true while waiting for / running MathJax
+    this.mjPending = false;  // true if input changed during a typeset
+    this.oldText = null;     // last text sent to MathJax
   }
 
   // Swap buffer/preview so the freshly typeset one is shown.
   swapBuffers() {
-    let buffer = this.preview, preview = this.buffer;
+    const buffer = this.preview;
+    const preview = this.buffer;
     this.buffer = buffer;
     this.preview = preview;
     buffer.style.visibility = "hidden";
@@ -23,49 +49,48 @@ class Preview {
 
   // Debounce: typeset only after a pause in typing.
   update() {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-
+    clearTimeout(this.timeout);
     this.timeout = setTimeout(() => this.createPreview(), this.delay);
   }
 
-  // Render input into the hidden buffer, then typeset it.
   createPreview() {
     this.timeout = null;
-    this.mjRunning = true;
-    this.mjPending = false;
+
+    // A typeset (or the wait for MathJax) is in flight: rerun when it finishes.
+    if (this.mjRunning) {
+      this.mjPending = true;
+      return;
+    }
 
     const text = this.input.value;
     if (text === this.oldText) return;
     this.oldText = text;
 
-    let buffer = this.buffer;  // capture: SwapBuffers may run before the promise settles
+    this.mjRunning = true;
+    this.mjPending = false;
 
+    const buffer = this.buffer;  // capture: swapBuffers may run before the promise settles
 
-    MathJax.typesetClear([buffer]);  // drop metadata from the previous render
-
-    buffer.innerHTML = text;
-
-    MathJax.typesetPromise([buffer])
+    mathJaxReady
       .then(() => {
+        MathJax.typesetClear([buffer]);  // drop metadata from the previous render
+        buffer.innerHTML = text;
+        return MathJax.typesetPromise([buffer]);
+      })
+      .then(() => this.swapBuffers())
+      .catch((err) => {
+        this.oldText = null;  // allow a retry on the next change
+        console.error("MathJax typeset failed:", err);
+      })
+      .finally(() => {
         this.mjRunning = false;
         if (this.mjPending) {
+          this.mjPending = false;
           this.update();
         }
-        else {
-          this.previewDone();
-        }
-      })
-      .catch((err) => console.error("MathJax typeset failed:", err));
-  }
-
-  previewDone() {
-    this.mjRunning = this.mjPending = false;
-    this.swapBuffers();
+      });
   }
 }
-
 
 function initPolymathTextareaPreview(id) {
   const target = document.getElementById(id);
@@ -73,7 +98,11 @@ function initPolymathTextareaPreview(id) {
     return;
   }
 
-  const preview = new Preview("PolymathTextareaPreview-" + id, "PolymathTextareaBuffer-" + id, id);
+  const preview = new Preview(
+    "PolymathTextareaPreview-" + id,
+    "PolymathTextareaBuffer-" + id,
+    id
+  );
 
   window.wagtailPolymathPreviews = window.wagtailPolymathPreviews || {};
   window.wagtailPolymathPreviews[id] = preview;
@@ -82,19 +111,5 @@ function initPolymathTextareaPreview(id) {
     preview.update();
   }
 
-  target.addEventListener("keyup",  () => {
-    if (this.mjRunning) {
-      this.mjPending = true;
-    }
-    else {
-      preview.update()
-    }
-  });
+  target.addEventListener("input", () => preview.update());
 }
-
-window.MathJax = {
-  loader: { load: ["input/asciimath"] },  // "AM" isn't in tex-mml-chtml; add it explicitly
-  tex: {
-    inlineMath: { '[+]': [['$', '$']] }
-  },
-};
