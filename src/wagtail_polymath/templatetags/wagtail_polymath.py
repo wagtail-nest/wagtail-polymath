@@ -57,10 +57,10 @@ def polymath_scripts() -> "Any | SafeString":
 def polymath_stylesheets() -> "Any | SafeString":
     stylesheets = []
     for library in wagtail_polymath_config.libraries_css:
-        attributes = _build_attributes(library)
+        attributes = _build_attributes(library, defer=False)
         stylesheets.append(
             format_html(
-                '<link rel="stylesheet" src="{path}"{attributes}/>',
+                '<link rel="stylesheet" href="{path}"{attributes}/>',
                 path=library["url"],
                 attributes=flatatt(attributes),
             )
