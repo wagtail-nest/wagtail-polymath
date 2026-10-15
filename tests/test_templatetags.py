@@ -49,7 +49,7 @@ class TestStylesheetsTemplateTag(TestCase):
             css = ENGINES["katex"]["libraries"][2]
             self.assertHTMLEqual(
                 polymath_stylesheets(),
-                f'<link rel="stylesheet" src="{css["url"]}" crossorigin="anonymous" integrity="{css["sri"]}" defer/>',
+                f'<link rel="stylesheet" href="{css["url"]}" crossorigin="anonymous" integrity="{css["sri"]}" />',
             )
 
 
