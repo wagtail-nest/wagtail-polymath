@@ -1,4 +1,3 @@
 window.MathJax = {
-  loader: { load: ["input/asciimath"] },
-  tex: { inlineMath: { '[+]': [['$', '$']] } },
+  loader: { load: ["input/asciimath"] }
 };

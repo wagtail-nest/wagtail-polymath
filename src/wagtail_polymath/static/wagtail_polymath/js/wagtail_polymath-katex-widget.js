@@ -23,13 +23,7 @@ class Preview {
     }
 
     this.preview.innerHTML = this.input.value;
-    renderMathInElement(this.preview, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "$", right: "$", display: false },
-      ],
-      throwOnError: false,
-    });
+    renderMathInElement(this.preview, { throwOnError: false });
   }
 }
 

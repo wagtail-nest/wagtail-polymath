@@ -9,9 +9,6 @@ if (window.MathJax && window.MathJax.version) {
 } else {
   window.MathJax = {
     loader: { load: ["input/asciimath"] },  // "AM" isn't in tex-mml-chtml; add it explicitly
-    tex: {
-      inlineMath: { "[+]": [["$", "$"]] },
-    },
     startup: {
       ready() {
         // @see https://docs.mathjax.org/en/latest/web/actions.html
