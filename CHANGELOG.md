@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-- Dropped support for Wagtail < 7.4
+## 2.0.3 (2026-10-15)
+
+- Dropped support for Wagtail < 7.4 (as 7.0 is imminently EOL) ([#30](https://github.com/wagtail-nest/wagtail-polymath/pull/30) @kevinhowbrook)
+- Dropped inline math - it introduces more complexities than benefits ([#36](https://github.com/wagtail-nest/wagtail-polymath/pull/36) @zerolab)
+- Fixed a preview issue when the Mathjax library was slow to download/init ([#32](https://github.com/wagtail-nest/wagtail-polymath/pull/32) @zerolab)
+- Fixed incorrect stylesheets template tag attributes ([#34](https://github.com/wagtail-nest/wagtail-polymath/pull/34) @zerolab)
 
 ## 2.0.2 (2026-09-30)
 
