@@ -81,4 +81,10 @@ tox
 or, you can run them for a specific environment `tox -e python3.11-django4.2-wagtail5.2` or specific test
 `tox -e python3.11-django4.2-wagtail5.2 -- tests/test_placeholder.py`
 
+The JavaScript tests use Node's built-in test runner (Node 18 or later), with no npm dependencies:
+
+```sh
+node --test tests/js/*.test.mjs
+```
+
 To run the test app interactively, use `tox -e interactive`, visit `http://127.0.0.1:8020/admin/` and log in with `admin`/`changeme`.

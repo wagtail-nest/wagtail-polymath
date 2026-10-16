@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added an optional `mathjax_config` setting to `WAGTAIL_POLYMATH`, merged into the MathJax configuration on the
+  front end and in the admin preview. See [Extra MathJax configuration](README.md#extra-mathjax-configuration)
+
 ## 2.0.3 (2026-10-15)
 
 - Dropped support for Wagtail < 7.4 (as 7.0 is imminently EOL) ([#30](https://github.com/wagtail-nest/wagtail-polymath/pull/30) @kevinhowbrook)
