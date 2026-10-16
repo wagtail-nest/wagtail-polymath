@@ -1,3 +1,6 @@
+import json
+
+from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase, override_settings
 
 from wagtail_polymath.config import ENGINES, wagtail_polymath_config
@@ -50,3 +53,40 @@ class TestSettings(TestCase):
     )
     def test_mathjax_sri_returns_custom_sri(self):
         self.assertEqual(wagtail_polymath_config.libraries_js[0]["sri"], CUSTOM_SRI)
+
+
+MATHJAX_CONFIG = {
+    "loader": {"paths": {"fonts": "[mathjax]/fonts"}},
+    "options": {"menuOptions": {"settings": {"speech": False, "assistiveMml": True}}},
+}
+
+
+class TestMathJaxConfig(TestCase):
+    def test_defaults_to_empty(self):
+        self.assertEqual(wagtail_polymath_config.mathjax_config, {})
+        self.assertEqual(wagtail_polymath_config.mathjax_config_json, "")
+
+    @override_settings(WAGTAIL_POLYMATH={"mathjax_config": MATHJAX_CONFIG})
+    def test_reads_setting(self):
+        self.assertEqual(wagtail_polymath_config.mathjax_config, MATHJAX_CONFIG)
+        self.assertEqual(
+            json.loads(wagtail_polymath_config.mathjax_config_json), MATHJAX_CONFIG
+        )
+
+    @override_settings(
+        WAGTAIL_POLYMATH={"engine": "katex", "mathjax_config": MATHJAX_CONFIG}
+    )
+    def test_ignored_for_katex(self):
+        self.assertEqual(wagtail_polymath_config.mathjax_config_json, "")
+
+    def test_must_be_a_dict(self):
+        with self.assertRaises(ImproperlyConfigured):
+            with override_settings(WAGTAIL_POLYMATH={"mathjax_config": ["nope"]}):
+                pass
+
+    def test_must_be_json_serialisable(self):
+        with self.assertRaises(ImproperlyConfigured):
+            with override_settings(
+                WAGTAIL_POLYMATH={"mathjax_config": {"x": object()}}
+            ):
+                pass
