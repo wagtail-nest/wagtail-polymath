@@ -3,18 +3,36 @@ const mathJaxReady = new Promise((resolve) => {
   resolveMathJaxReady = resolve;
 });
 
+// Extra config from WAGTAIL_POLYMATH["mathjax_config"], passed on this script tag
+const polymathUserConfig = JSON.parse((document.currentScript && document.currentScript.dataset.polymathConfig) || "{}");
+
+// Objects merge; arrays and other values replace
+function polymathMergeConfig(target, source) {
+  const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+  for (const [key, value] of Object.entries(source)) {
+    target[key] = isObject(value) && isObject(target[key]) ? polymathMergeConfig(target[key], value) : value;
+  }
+  return target;
+}
+
 if (window.MathJax && window.MathJax.version) {
   // MathJax was loaded before this script: don't clobber it, just wait for startup.
+  if (Object.keys(polymathUserConfig).length) {
+    console.warn("wagtail-polymath: MathJax was already loaded, so WAGTAIL_POLYMATH['mathjax_config'] was not applied.");
+  }
   window.MathJax.startup.promise.then(resolveMathJaxReady);
 } else {
-  window.MathJax = {
-    loader: { load: ["input/asciimath"] },  // "AM" isn't in tex-mml-chtml; add it explicitly
-    startup: {
-      ready() {
-        // @see https://docs.mathjax.org/en/latest/web/actions.html
-        MathJax.startup.defaultReady();
-        MathJax.startup.promise.then(resolveMathJaxReady);
-      },
+  window.MathJax = polymathMergeConfig(
+    { loader: { load: ["input/asciimath"] } },  // "AM" isn't in tex-mml-chtml; add it explicitly
+    polymathUserConfig,
+  );
+  // Set after merging, so user config can't replace the hook the preview relies on
+  window.MathJax.startup = {
+    ...window.MathJax.startup,
+    ready() {
+      // @see https://docs.mathjax.org/en/latest/web/actions.html
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(resolveMathJaxReady);
     },
   };
 }

@@ -61,3 +61,20 @@ class TestPolymathTextareaWidget(TestCase):
             f'<script src="{CUSTOM_URL}" integrity="{CUSTOM_SRI}" crossorigin="anonymous" defer></script>',
             str(self.widget.media),
         )
+
+
+class TestPolymathTextareaWidgetMathJaxConfig(TestCase):
+    def test_widget_scripts_have_no_config_by_default(self):
+        self.assertNotIn("data-polymath-config", str(PolymathTextareaWidget().media))
+
+    @override_settings(
+        WAGTAIL_POLYMATH={"mathjax_config": {"loader": {"paths": {"fonts": "/fonts"}}}}
+    )
+    def test_widget_script_carries_config(self):
+        widget_tag = next(
+            line
+            for line in str(PolymathTextareaWidget().media).splitlines()
+            if "wagtail_polymath-mathjax-widget.js" in line
+        )
+        self.assertIn("data-polymath-config=", widget_tag)
+        self.assertIn("&quot;fonts&quot;:&quot;/fonts&quot;", widget_tag)

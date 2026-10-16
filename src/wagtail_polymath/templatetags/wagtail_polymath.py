@@ -34,10 +34,14 @@ def _build_attributes(
 def polymath_scripts() -> "Any | SafeString":
     scripts = []
     if wagtail_polymath_config.init_js:
+        init_attributes = {}
+        if config_json := wagtail_polymath_config.mathjax_config_json:
+            init_attributes["data-polymath-config"] = config_json
         scripts.append(
             format_html(
-                '<script src="{init_path}"></script>',
+                '<script src="{init_path}"{attributes}></script>',
                 init_path=versioned_static(wagtail_polymath_config.init_js),
+                attributes=flatatt(init_attributes),
             )
         )
     for library in wagtail_polymath_config.libraries_js:

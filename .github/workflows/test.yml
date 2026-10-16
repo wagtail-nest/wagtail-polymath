@@ -69,6 +69,27 @@ jobs:
           if-no-files-found: ignore
           retention-days: 1
 
+  js-tests:
+    name: JavaScript
+    runs-on: ubuntu-26.04-arm
+    permissions:
+      contents: read # to fetch code (actions/checkout)
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            api.github.com:443
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test
+        run: node --test tests/js/*.test.mjs
+
   coverage:
     name: Combine & check coverage.
     runs-on: ubuntu-26.04-arm

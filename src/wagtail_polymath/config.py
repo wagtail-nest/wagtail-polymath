@@ -1,7 +1,10 @@
+import json
+
 from typing import Any, NotRequired, TypedDict, cast
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.core.signals import setting_changed
 
 
@@ -19,6 +22,7 @@ class EngineDict(TypedDict):
 class UserSettingsDict(TypedDict, total=False):
     libraries: list[LibraryDict]
     engine: NotRequired[str]
+    mathjax_config: NotRequired[dict[str, Any]]
 
 
 MATHJAX_VERSION = "4.1.3"
@@ -73,6 +77,7 @@ class Settings:
     engine: str = "mathjax"
     libraries_js: list[LibraryDict]
     libraries_css: list[LibraryDict]
+    mathjax_config: dict[str, Any]
 
     def __init__(self):
         self.setup()
@@ -94,6 +99,13 @@ class Settings:
     def init_js(self) -> str | None:
         return ENGINES[self.engine].get("init_js")
 
+    @property
+    def mathjax_config_json(self) -> str:
+        """The extra MathJax config as JSON, or "" when unset or not using MathJax."""
+        if self.engine != "mathjax" or not self.mathjax_config:
+            return ""
+        return json.dumps(self.mathjax_config, separators=(",", ":"))
+
     def setup(self) -> None:
         user_engine = self._user_settings.get("engine", "mathjax")
         if user_engine and user_engine in ENGINES:
@@ -110,6 +122,19 @@ class Settings:
                 self.libraries_css.append(library)
             else:
                 self.libraries_js.append(library)
+
+        mathjax_config = self._user_settings.get("mathjax_config") or {}
+        if not isinstance(mathjax_config, dict):
+            raise ImproperlyConfigured(
+                "WAGTAIL_POLYMATH['mathjax_config'] must be a dict."
+            )
+        try:
+            json.dumps(mathjax_config)
+        except (TypeError, ValueError) as error:
+            raise ImproperlyConfigured(
+                "WAGTAIL_POLYMATH['mathjax_config'] must be JSON-serialisable."
+            ) from error
+        self.mathjax_config = mathjax_config
 
 
 wagtail_polymath_config = Settings()

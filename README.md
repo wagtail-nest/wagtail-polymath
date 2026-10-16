@@ -97,6 +97,7 @@ WAGTAIL_POLYMATH = {
         },
         ...,
     ],
+    "mathjax_config": {...},  # Optional. Extra MathJax configuration, see below
 }
 ```
 
@@ -161,6 +162,43 @@ and the one loaded by the `polymath_scripts` template tag.
 Note that if you are using MathJax, the bundled preview JS assumes MathJax's combined `tex-mml-chtml` component and
 its `input/asciimath` loader — if you switch to a different version or build of MathJax, you're responsible for keeping
 it compatible with that configuration.
+
+### Extra MathJax configuration
+
+wagtail-polymath builds the MathJax configuration (`window.MathJax`) for you. To add your own
+[MathJax options](https://docs.mathjax.org/en/latest/options/index.html), set `mathjax_config`.
+It is merged into polymath's configuration, both for the `MathBlock` live preview in the Wagtail admin and
+wherever you use the `polymath_scripts` template tag.
+
+For example, if you self-host MathJax 4 and have a strict Content Security Policy:
+
+```python
+# settings.py
+WAGTAIL_POLYMATH = {
+    "libraries": [
+        {"url": "https://cdn.example.com/mathjax/4.1.3/tex-mml-chtml.js", "sri": "sha256-..."},
+    ],
+    "mathjax_config": {
+        # MathJax 4 loads its fonts from jsDelivr by default. Point it at a folder containing
+        # your copy of the font package (e.g. mathjax-newcm-font)
+        "loader": {"paths": {"fonts": "https://cdn.example.com/mathjax/4.1.3/fonts"}},
+        # MathJax 4 generates speech and braille in a web worker created from a `blob:` URL,
+        # which needs `blob:` in your CSP's `worker-src`. Use assistive MathML instead
+        "options": {
+            "menuOptions": {
+                "settings": {"speech": False, "braille": False, "assistiveMml": True}
+            }
+        },
+    },
+}
+```
+
+- Objects are merged key by key, so `loader.paths` above keeps polymath's own `loader.load` (used for AsciiMath).
+  Arrays and other values replace polymath's.
+- Values must be JSON-serialisable, so functions aren't supported. The configuration is passed to the browser in a
+  `data-` attribute, so no inline script is needed.
+- `startup.ready` is reserved: the admin preview relies on it.
+- `mathjax_config` is ignored when `engine` is `"katex"`.
 
 ## Contributing
 
