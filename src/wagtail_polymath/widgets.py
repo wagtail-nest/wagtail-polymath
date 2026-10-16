@@ -53,10 +53,16 @@ class PolymathTextareaWidget(Textarea):
                 )
             )
 
+        # The widget script reads any extra MathJax config from this attribute
+        widget_attrs = {}
+        if config_json := wagtail_polymath_config.mathjax_config_json:
+            widget_attrs["data-polymath-config"] = config_json
         js = [
             *scripts,
             *[
-                versioned_static(script)
+                Script(versioned_static(script), **widget_attrs)
+                if widget_attrs
+                else versioned_static(script)
                 for script in wagtail_polymath_config.widget_media_js
             ],
         ]

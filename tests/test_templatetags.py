@@ -66,3 +66,23 @@ class TestTemplateTagHelpers(TestCase):
             _build_attributes(lib, defer=True),
             {"crossorigin": "anonymous", "integrity": lib["sri"], "defer": True},
         )
+
+
+class TestScriptsTemplateTagMathJaxConfig(TestCase):
+    def test_no_config_attribute_by_default(self):
+        self.assertNotIn("data-polymath-config", polymath_scripts())
+
+    @override_settings(
+        WAGTAIL_POLYMATH={"mathjax_config": {"loader": {"paths": {"fonts": "/fonts"}}}}
+    )
+    def test_init_script_carries_config(self):
+        init_tag = next(
+            line
+            for line in polymath_scripts().splitlines()
+            if "mathjax_init.js" in line
+        )
+        # JSON is HTML-escaped in the attribute; the browser decodes it in dataset
+        self.assertIn(
+            'data-polymath-config="{&quot;loader&quot;:{&quot;paths&quot;:{&quot;fonts&quot;:&quot;/fonts&quot;}}}"',
+            init_tag,
+        )
